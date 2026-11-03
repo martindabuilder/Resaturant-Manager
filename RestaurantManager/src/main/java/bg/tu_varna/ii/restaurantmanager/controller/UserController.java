@@ -62,5 +62,4 @@ public class UserController {
     public List<User> getUsersByStatus(@RequestParam boolean enabled) {
         return userService.getUsersByStatus(enabled);
     }
-    
 }
