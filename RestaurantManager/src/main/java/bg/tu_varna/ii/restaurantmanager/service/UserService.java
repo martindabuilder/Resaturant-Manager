@@ -5,6 +5,8 @@ import bg.tu_varna.ii.restaurantmanager.entity.User;
 import bg.tu_varna.ii.restaurantmanager.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -29,5 +31,14 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
         user.setEnabled(true);
         userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found."));
     }
 }
