@@ -41,4 +41,16 @@ public class UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found."));
     }
+
+    public List<User> getUsersByRole(Role role) {
+        return userRepository.findByRole(role);
+    }
+
+    public List<User> getUsersByStatus(boolean enabled) {
+        return userRepository.findByEnabled(enabled);
+    }
+
+    public List<User> searchUsersByName(String name) {
+        return userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
+    }
 }

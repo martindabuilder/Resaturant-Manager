@@ -47,4 +47,20 @@ public class UserController {
     public void activateUser(@PathVariable Long id) {
         userService.activateUser(id);
     }
+
+    @GetMapping("/search")
+    public List<User> searchUsers(@RequestParam String name) {
+        return userService.searchUsersByName(name);
+    }
+
+    @GetMapping("/role/{role}")
+    public List<User> getUsersByRole(@PathVariable Role role) {
+        return userService.getUsersByRole(role);
+    }
+
+    @GetMapping("/status")
+    public List<User> getUsersByStatus(@RequestParam boolean enabled) {
+        return userService.getUsersByStatus(enabled);
+    }
+    
 }
