@@ -5,6 +5,7 @@ import bg.tu_varna.ii.restaurantmanager.entity.User;
 import bg.tu_varna.ii.restaurantmanager.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import bg.tu_varna.ii.restaurantmanager.dto.UserResponseDto;
 
 import java.util.List;
 
@@ -18,57 +19,58 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping
-    public User createUser(
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public UserResponseDto createUser(
             @RequestParam String username,
             @RequestParam String password,
             @RequestParam String firstName,
             @RequestParam String lastName,
             @RequestParam Role role
     ) throws IllegalAccessException {
-        return userService.createUser(username, password, firstName, lastName, role);
+        User user = userService.createUser(username, password, firstName, lastName, role);
+        return new UserResponseDto(user);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getAllUsers().stream().map(UserResponseDto::new).toList();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public UserResponseDto getUserById(@PathVariable Long id) {
+        return new UserResponseDto(userService.getUserById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public void deactivateUser(@PathVariable Long id) {
         userService.deactivateUser(id);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{id}/activate")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public void activateUser(@PathVariable Long id) {
         userService.activateUser(id);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/search")
-    public List<User> searchUsers(@RequestParam String name) {
-        return userService.searchUsersByName(name);
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public List<UserResponseDto> searchUsers(@RequestParam String name) {
+        return userService.searchUsersByName(name).stream().map(UserResponseDto::new).toList();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/role/{role}")
-    public List<User> getUsersByRole(@PathVariable Role role) {
-        return userService.getUsersByRole(role);
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public List<UserResponseDto> getUsersByRole(@PathVariable Role role) {
+        return userService.getUsersByRole(role).stream().map(UserResponseDto::new).toList();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/status")
-    public List<User> getUsersByStatus(@RequestParam boolean enabled) {
-        return userService.getUsersByStatus(enabled);
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public List<UserResponseDto> getUsersByStatus(@RequestParam boolean enabled) {
+        return userService.getUsersByStatus(enabled).stream().map(UserResponseDto::new).toList();
     }
 }
