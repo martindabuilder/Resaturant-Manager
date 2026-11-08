@@ -1,13 +1,17 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
+import bg.tu_varna.ii.restaurantmanager.dto.DishResponseDto;
 import bg.tu_varna.ii.restaurantmanager.entity.Category;
 import bg.tu_varna.ii.restaurantmanager.entity.Dish;
 import bg.tu_varna.ii.restaurantmanager.repository.CategoryRepository;
 import bg.tu_varna.ii.restaurantmanager.repository.DishRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Service
 public class DishService {
 
     private final DishRepository dishRepository;
@@ -18,7 +22,9 @@ public class DishService {
         this.dishRepository = dishRepository;
     }
 
-    public Dish createDish(String name, String description, Integer weight, BigDecimal price, Long categoryId) {
+    @Transactional
+    public DishResponseDto createDish(String name, String description, Integer weight, BigDecimal price, Long categoryId) {
+
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Dish name cannot be empty.");
         }
@@ -30,15 +36,12 @@ public class DishService {
         }
 
         if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price cannot be a negative number.");
+            throw new IllegalArgumentException("Price cannot be a negative amount.");
         }
 
-        Category category = categoryRepository.findById(categoryId).
-                orElseThrow(() -> new IllegalArgumentException(
-                        "Category with the following ID not found: " + categoryId
-                ));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category with the following ID was not found: " + categoryId));
 
-        if(!category.isActive()) {
+        if (!category.isActive()) {
             throw new IllegalArgumentException("Cannot add a dish to an inactive category.");
         }
 
@@ -47,28 +50,43 @@ public class DishService {
         }
 
         Dish dish = new Dish(trimmedName, description, weight, price, category);
+        Dish savedDish = dishRepository.save(dish);
 
-        return dishRepository.save(dish);
+        return new DishResponseDto(savedDish);
     }
 
-    public List<Dish> getAllDishes() {
-        return dishRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<DishResponseDto> getAllDishes() {
+        return dishRepository.findAll().stream().map(DishResponseDto::new).toList();
     }
 
-    public Dish getDishById(Long id) {
-        return dishRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Dish with the following ID is not found: " + id));
+    @Transactional(readOnly = true)
+    public DishResponseDto getDishById(Long id) {
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Dish not found with ID: " + id));
+        return new DishResponseDto(dish);
     }
 
-    public List<Dish> getDishesByCategory(Long categoryId) {
-        return dishRepository.findByCategory_Id(categoryId);
+    @Transactional(readOnly = true)
+    public List<DishResponseDto> getDishesByCategory(Long categoryId) {
+        return dishRepository.findByCategory_Id(categoryId).stream().map(DishResponseDto::new).toList();
     }
 
-    public List<Dish> getDishesByAvailability(boolean available) {
-        return dishRepository.findByAvailable(available);
+    @Transactional(readOnly = true)
+    public List<DishResponseDto> getDishesByAvailability(boolean available) {
+        return dishRepository.findByAvailable(available).stream().map(DishResponseDto::new).toList();
     }
 
-    public List<Dish> searchDishes(String name) {
-        return dishRepository.findByNameContainingIgnoreCase(name);
+    @Transactional(readOnly = true)
+    public List<DishResponseDto> searchDishes(String name) {
+        return dishRepository.findByNameContainingIgnoreCase(name).stream().map(DishResponseDto::new).toList();
+    }
+
+    @Transactional
+    public DishResponseDto updateDishAvailability(Long id, boolean available) {
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Dish not found with ID: " + id));
+        dish.setAvailable(available);
+        Dish updatedDish = dishRepository.save(dish);
+
+        return new DishResponseDto(updatedDish);
     }
 }
