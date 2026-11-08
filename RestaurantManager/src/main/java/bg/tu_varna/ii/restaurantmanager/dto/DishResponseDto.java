@@ -6,15 +6,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class DishResponseDto {
-    private Long id;
-    private String name;
-    private String description;
-    private Integer weight;
-    private BigDecimal price;
-    private boolean available;
-    private LocalDateTime createdAt;
-    private Long categoryId;
-    private String categoryName;
+    private final Long id;
+    private final String name;
+    private final String description;
+    private final Integer weight;
+    private final BigDecimal price;
+    private final boolean available;
+    private final LocalDateTime createdAt;
+    private final Long categoryId;
+    private final String categoryName;
 
     public DishResponseDto(Dish dish) {
         this.id = dish.getId();
