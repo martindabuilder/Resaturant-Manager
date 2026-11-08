@@ -8,5 +8,5 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
     List<Dish> findByCategory_Id(Long categoryId);
     List<Dish> findByAvailable(boolean available);
     List<Dish> findByNameContainingIgnoreCase(String name);
-    List<Dish> existsByNameIgnoreCaseAndCategory_Id(String name, Long categoryId);
+    boolean existsByNameIgnoreCaseAndCategory_Id(String name, Long categoryId);
 }
