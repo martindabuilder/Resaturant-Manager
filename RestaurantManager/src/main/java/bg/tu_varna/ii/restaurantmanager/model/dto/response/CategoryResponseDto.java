@@ -21,19 +21,15 @@ public class CategoryResponseDto {
     public Long getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public String getDescription() {
         return description;
     }
-
     public boolean isActive() {
         return active;
     }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

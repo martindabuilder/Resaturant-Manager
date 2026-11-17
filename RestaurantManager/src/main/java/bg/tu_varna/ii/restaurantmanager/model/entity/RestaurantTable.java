@@ -28,6 +28,13 @@ public class RestaurantTable {
 
     protected RestaurantTable() {}
 
+    public RestaurantTable(Integer tableNumber, Integer capacity) {
+        this.tableNumber = tableNumber;
+        this.capacity = capacity;
+        this.status = TableStatus.AVAILABLE;
+        this.active = true;
+    }
+
     @PrePersist
     protected void onCreate() {createdAt = LocalDateTime.now();}
 

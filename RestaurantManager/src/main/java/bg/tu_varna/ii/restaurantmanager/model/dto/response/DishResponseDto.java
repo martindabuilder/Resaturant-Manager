@@ -31,35 +31,27 @@ public class DishResponseDto {
     public Long getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
     public Integer getWeight() {
         return weight;
     }
-
     public BigDecimal getPrice() {
         return price;
     }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public String getCategoryName() {
         return categoryName;
     }
-
     public Long getCategoryId() {
         return categoryId;
     }
-
     public boolean isAvailable() {
         return available;
     }
-
     public String getDescription() {
         return description;
     }
