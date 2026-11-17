@@ -1,7 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
-import bg.tu_varna.ii.restaurantmanager.entity.Role;
-import bg.tu_varna.ii.restaurantmanager.entity.User;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
+import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import bg.tu_varna.ii.restaurantmanager.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

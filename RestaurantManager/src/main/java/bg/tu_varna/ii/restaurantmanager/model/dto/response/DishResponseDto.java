@@ -1,6 +1,6 @@
-package bg.tu_varna.ii.restaurantmanager.dto;
+package bg.tu_varna.ii.restaurantmanager.model.dto.response;
 
-import bg.tu_varna.ii.restaurantmanager.entity.Dish;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Dish;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

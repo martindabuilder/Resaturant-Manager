@@ -1,11 +1,11 @@
 package bg.tu_varna.ii.restaurantmanager.controller;
 
-import bg.tu_varna.ii.restaurantmanager.entity.Role;
-import bg.tu_varna.ii.restaurantmanager.entity.User;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
+import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import bg.tu_varna.ii.restaurantmanager.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import bg.tu_varna.ii.restaurantmanager.dto.UserResponseDto;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.UserResponseDto;
 
 import java.util.List;
 

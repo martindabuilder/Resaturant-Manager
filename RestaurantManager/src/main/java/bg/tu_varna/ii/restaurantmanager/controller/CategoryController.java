@@ -1,7 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.controller;
 
-import bg.tu_varna.ii.restaurantmanager.dto.CategoryResponseDto;
-import bg.tu_varna.ii.restaurantmanager.entity.Category;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.CategoryResponseDto;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Category;
 import bg.tu_varna.ii.restaurantmanager.service.CategoryService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

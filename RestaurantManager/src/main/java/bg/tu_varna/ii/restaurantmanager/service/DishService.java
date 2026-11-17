@@ -1,8 +1,8 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
-import bg.tu_varna.ii.restaurantmanager.dto.DishResponseDto;
-import bg.tu_varna.ii.restaurantmanager.entity.Category;
-import bg.tu_varna.ii.restaurantmanager.entity.Dish;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.DishResponseDto;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Category;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Dish;
 import bg.tu_varna.ii.restaurantmanager.repository.CategoryRepository;
 import bg.tu_varna.ii.restaurantmanager.repository.DishRepository;
 import org.springframework.stereotype.Service;

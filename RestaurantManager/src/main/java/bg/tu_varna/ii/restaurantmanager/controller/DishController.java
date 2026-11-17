@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.controller;
 
-import bg.tu_varna.ii.restaurantmanager.dto.DishResponseDto;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.DishResponseDto;
 import bg.tu_varna.ii.restaurantmanager.service.DishService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

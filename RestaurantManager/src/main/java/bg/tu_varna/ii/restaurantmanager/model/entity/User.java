@@ -1,4 +1,4 @@
-package bg.tu_varna.ii.restaurantmanager.entity;
+package bg.tu_varna.ii.restaurantmanager.model.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

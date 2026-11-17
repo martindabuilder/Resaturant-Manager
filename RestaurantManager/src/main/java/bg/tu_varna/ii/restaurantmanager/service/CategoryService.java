@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
-import bg.tu_varna.ii.restaurantmanager.entity.Category;
+import bg.tu_varna.ii.restaurantmanager.model.entity.Category;
 import bg.tu_varna.ii.restaurantmanager.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
