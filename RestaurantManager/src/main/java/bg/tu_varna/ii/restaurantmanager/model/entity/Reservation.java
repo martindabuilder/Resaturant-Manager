@@ -13,7 +13,7 @@ public class Reservation {
     @Column(nullable = false, length = 100)
     private String customerName;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 20)
     private String phoneNumber;
 
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class Reservation {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    protected Reservation() {}
+    protected Reservation(){}
 
     public Reservation(
             String customerName,
@@ -53,5 +53,35 @@ public class Reservation {
         this.endTime = endTime;
         this.table = table;
         this.status = ReservationStatus.CONFIRMED;
+    }
+
+    public Long getId() {return id;}
+
+    public String getCustomerName() {return customerName;}
+    public void setCustomerName(String customerName) {this.customerName = customerName;}
+
+    public ReservationStatus getStatus() {return status;}
+    public void setStatus(ReservationStatus status) {this.status = status;}
+
+    public LocalDateTime getCreatedAt() {return createdAt;}
+
+    public RestaurantTable getTable() {return table;}
+    public void setTable(RestaurantTable table) {this.table = table;}
+
+    public LocalDateTime getEndTime() {return endTime;}
+    public void setEndTime(LocalDateTime endTime) {this.endTime = endTime;}
+
+    public LocalDateTime getStartTime() {return startTime;}
+    public void setStartTime(LocalDateTime startTime) {this.startTime = startTime;}
+
+    public Integer getGuestCount() {return guestCount;}
+    public void setGuestCount(Integer guestCount) {this.guestCount = guestCount;}
+
+    public String getPhoneNumber() {return phoneNumber;}
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 }
