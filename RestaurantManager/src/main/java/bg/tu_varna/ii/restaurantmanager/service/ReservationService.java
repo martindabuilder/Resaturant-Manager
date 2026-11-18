@@ -54,7 +54,11 @@ public class ReservationService {
             throw new IllegalArgumentException("Guest count exceeds table capacity.");
         }
 
-        List<ReservationStatus> activeStatuses = List.of(ReservationStatus.CONFIRMED, ReservationStatus.SEATED);
+        List<ReservationStatus> activeStatuses = List.of(
+                ReservationStatus.PENDING,
+                ReservationStatus.CONFIRMED,
+                ReservationStatus.SEATED
+        );
 
         boolean overlapping = reservationRepository.existsOverlappingReservation(tableId, startTime, endTime, activeStatuses);
 

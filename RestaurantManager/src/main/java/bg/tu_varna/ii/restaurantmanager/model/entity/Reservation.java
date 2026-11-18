@@ -52,7 +52,7 @@ public class Reservation {
         this.startTime = startTime;
         this.endTime = endTime;
         this.table = table;
-        this.status = ReservationStatus.CONFIRMED;
+        this.status = ReservationStatus.PENDING;
     }
 
     public Long getId() {return id;}
