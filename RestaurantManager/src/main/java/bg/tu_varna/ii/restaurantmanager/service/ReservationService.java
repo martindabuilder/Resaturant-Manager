@@ -1,5 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
+import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
+import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
 import bg.tu_varna.ii.restaurantmanager.model.entity.ReservationStatus;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
@@ -24,34 +26,36 @@ public class ReservationService {
     // handles the reservation creation and all of the checks for it
     @Transactional
     public Reservation createReservation(Long tableId, String customerName, String phoneNumber, Integer guestCount, LocalDateTime startTime, LocalDateTime endTime) {
+
         if (customerName == null || customerName.isBlank()) {
-            throw new IllegalArgumentException("Customer name is required.");
+            throw new BusinessRuleException("Customer name is required.");
         }
 
         if (phoneNumber == null || phoneNumber.isBlank()) {
-            throw new IllegalArgumentException("Phone number is required.");
+            throw new BusinessRuleException("Phone number is required.");
         }
 
         if (guestCount == null || guestCount <= 0) {
-            throw new IllegalArgumentException("Guest count must be bigger than 0.");
+            throw new BusinessRuleException("Guest count must be bigger than 0.");
         }
 
         if (startTime == null || endTime == null) {
-            throw new IllegalArgumentException("Start time and end time of reservation are required.");
+            throw new BusinessRuleException("Start time and end time of reservation are required.");
         }
 
         if (!startTime.isBefore(endTime)) {
-            throw new IllegalArgumentException("Start time must be before end time.");
+            throw new BusinessRuleException("Start time must be before end time.");
         }
 
-        RestaurantTable table = tableRepository.findById(tableId).orElseThrow(() -> new IllegalArgumentException("Table not found."));
+        RestaurantTable table = tableRepository.findById(tableId)
+                .orElseThrow(() -> new ResourceNotFoundException("Table not found."));
 
         if (!table.isActive()) {
-            throw new IllegalArgumentException("Table is not active.");
+            throw new BusinessRuleException("Table is not active.");
         }
 
         if (table.getCapacity() < guestCount) {
-            throw new IllegalArgumentException("Guest count exceeds table capacity.");
+            throw new BusinessRuleException("Guest count exceeds table capacity.");
         }
 
         List<ReservationStatus> activeStatuses = List.of(
@@ -63,7 +67,7 @@ public class ReservationService {
         boolean overlapping = reservationRepository.existsOverlappingReservation(tableId, startTime, endTime, activeStatuses);
 
         if (overlapping) {
-            throw new IllegalArgumentException("The table already has a reservation during this time.");
+            throw new BusinessRuleException("The table already has a reservation during this time.");
         }
 
         Reservation reservation = new Reservation(customerName, phoneNumber, guestCount, startTime, endTime, table);
@@ -79,7 +83,7 @@ public class ReservationService {
     // gets the reserv. by its id
     @Transactional(readOnly = true)
     public Reservation getReservationById(Long id) {
-        return reservationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Reservation not found."));
+        return reservationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reservation not found."));
     }
 
     // gets the reserv. by the table

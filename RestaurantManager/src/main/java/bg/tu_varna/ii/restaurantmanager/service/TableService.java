@@ -1,4 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
+import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
+import bg.tu_varna.ii.restaurantmanager.exception.DuplicateResourceException;
+import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
 import bg.tu_varna.ii.restaurantmanager.model.entity.TableStatus;
 import bg.tu_varna.ii.restaurantmanager.repository.TableRepository;
@@ -15,15 +18,15 @@ public class TableService {
 
     public RestaurantTable createTable(Integer tableNumber, Integer capacity) {
         if (tableNumber == null || tableNumber <= 0) {
-            throw new IllegalArgumentException("Table number must be bigger than 0.");
+            throw new BusinessRuleException("Table number must be bigger than 0.");
         }
 
         if (capacity == null || capacity <= 0) {
-            throw new IllegalArgumentException("Table capacity must be bigger than 0.");
+            throw new BusinessRuleException("Table capacity must be bigger than 0.");
         }
 
         if (tableRepository.existsByTableNumber(tableNumber)) {
-            throw new IllegalArgumentException("Table number already exists.");
+            throw new DuplicateResourceException("Table number already exists.");
         }
 
         RestaurantTable table = new RestaurantTable(tableNumber, capacity);
@@ -37,12 +40,12 @@ public class TableService {
 
     // get specific table by ID
     public RestaurantTable getTableById(Long id) {
-        return tableRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Table not found with the following ID: " + id));
+        return tableRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Table not found with the following ID: " + id));
     }
 
     // get specific table by its number
     public RestaurantTable getTableByNumber(Integer tableNumber) {
-        return tableRepository.findByTableNumber(tableNumber).orElseThrow(() -> new IllegalArgumentException("Table not found with the following number: " + tableNumber));
+        return tableRepository.findByTableNumber(tableNumber).orElseThrow(() -> new ResourceNotFoundException("Table not found with the following number: " + tableNumber));
     }
 
     // updates the table information
@@ -50,15 +53,15 @@ public class TableService {
         RestaurantTable table = getTableById(id);
 
         if (tableNumber == null || tableNumber <= 0) {
-            throw new IllegalArgumentException("Table number must be bigger than 0.");
+            throw new BusinessRuleException("Table number must be bigger than 0.");
         }
 
         if (capacity == null || capacity <= 0) {
-            throw new IllegalArgumentException("Table capacity must be bigger than 0.");
+            throw new BusinessRuleException("Table capacity must be bigger than 0.");
         }
 
         if (!table.getTableNumber().equals(tableNumber) && tableRepository.existsByTableNumber(tableNumber)) {
-            throw new IllegalArgumentException("Table number already exists.");
+            throw new DuplicateResourceException("Table number already exists.");
         }
 
         table.setTableNumber(tableNumber);
@@ -72,7 +75,7 @@ public class TableService {
         RestaurantTable table = getTableById(id);
 
         if (status == null) {
-            throw new IllegalArgumentException("Table status cannot be empty.");
+            throw new BusinessRuleException("Table status cannot be empty.");
         }
 
         table.setStatus(status);
@@ -92,7 +95,7 @@ public class TableService {
         RestaurantTable table = getTableById(id);
 
         if (table.getStatus() != TableStatus.AVAILABLE) {
-            throw new IllegalArgumentException("Only available tables can be deactivated.");
+            throw new BusinessRuleException("Only available tables can be deactivated.");
         }
 
         table.setActive(false);
@@ -111,9 +114,8 @@ public class TableService {
 
     // find tables with sufficient capacity
     public List<RestaurantTable> getTablesByCapacity(Integer capacity) {
-
         if (capacity == null || capacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be greater than 0.");
+            throw new BusinessRuleException("Capacity must be greater than 0.");
         }
 
         return tableRepository.findByCapacityGreaterThanEqual(capacity);

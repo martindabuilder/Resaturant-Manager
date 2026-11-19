@@ -1,5 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
+import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
+import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.dto.response.DishResponseDto;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Category;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Dish;
@@ -26,27 +28,27 @@ public class DishService {
     public DishResponseDto createDish(String name, String description, Integer weight, BigDecimal price, Long categoryId) {
 
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Dish name cannot be empty.");
+            throw new BusinessRuleException("Dish name cannot be empty.");
         }
 
         String trimmedName = name.trim();
 
         if (weight == null || weight <= 0) {
-            throw new IllegalArgumentException("Weight must be bigger than 0.");
+            throw new BusinessRuleException("Weight must be bigger than 0.");
         }
 
         if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price cannot be a negative amount.");
+            throw new BusinessRuleException("Price cannot be a negative amount.");
         }
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException("Category with the following ID was not found: " + categoryId));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category with the following ID was not found: " + categoryId));
 
         if (!category.isActive()) {
-            throw new IllegalArgumentException("Cannot add a dish to an inactive category.");
+            throw new BusinessRuleException("Cannot add a dish to an inactive category.");
         }
 
         if (dishRepository.existsByNameIgnoreCaseAndCategory_Id(trimmedName, categoryId)) {
-            throw new IllegalArgumentException("Dish already exists in this category.");
+            throw new BusinessRuleException("Dish already exists in this category.");
         }
 
         Dish dish = new Dish(trimmedName, description, weight, price, category);
@@ -62,7 +64,7 @@ public class DishService {
 
     @Transactional(readOnly = true)
     public DishResponseDto getDishById(Long id) {
-        Dish dish = dishRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Dish not found with ID: " + id));
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dish not found with ID: " + id));
         return new DishResponseDto(dish);
     }
 
@@ -83,7 +85,7 @@ public class DishService {
 
     @Transactional
     public DishResponseDto updateDishAvailability(Long id, boolean available) {
-        Dish dish = dishRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Dish not found with ID: " + id));
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dish not found with ID: " + id));
         dish.setAvailable(available);
         Dish updatedDish = dishRepository.save(dish);
 

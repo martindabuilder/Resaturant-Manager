@@ -1,5 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
+import bg.tu_varna.ii.restaurantmanager.exception.DuplicateResourceException;
+import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
 import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import bg.tu_varna.ii.restaurantmanager.repository.UserRepository;
@@ -20,8 +22,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
-        User currentUser = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new IllegalArgumentException("Current user not found."));
+        User currentUser = userRepository.findByUsername(currentUsername).orElseThrow(() -> new ResourceNotFoundException("Current user not found."));
 
         Role currentRole = currentUser.getRole();
 
@@ -30,32 +31,31 @@ public class UserService {
                 throw new IllegalAccessException("ADMIN cannot create another ADMIN.");
             }
         }
-
         else if (currentRole == Role.MANAGER) {
             if (role != Role.WAITER && role != Role.CHEF) {
                 throw new IllegalAccessException("MANAGER can only create WAITER and CHEF.");
             }
         }
-
         else {
             throw new IllegalAccessException("You do not have permission to create users.");
         }
 
         if (userRepository.existsByUsername(username)) {
-            throw new IllegalAccessException("Username already exists.");
+            throw new DuplicateResourceException("Username already exists.");
         }
 
         User user = new User(username, password, firstName, lastName, role);
         return userRepository.save(user);
     }
+
     public void deactivateUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
         user.setEnabled(false);
         userRepository.save(user);
     }
 
     public void activateUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
         user.setEnabled(true);
         userRepository.save(user);
     }
@@ -65,8 +65,7 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found."));
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
     public List<User> getUsersByRole(Role role) {

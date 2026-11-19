@@ -1,5 +1,8 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 
+import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
+import bg.tu_varna.ii.restaurantmanager.exception.DuplicateResourceException;
+import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Category;
 import bg.tu_varna.ii.restaurantmanager.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -14,13 +17,14 @@ public class CategoryService {
     }
 
     public Category createCategory(String name, String description) {
-
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Category name cannot be empty.");
+            throw new BusinessRuleException("Category name cannot be empty.");
         }
 
+        String newName = name.trim();
+
         if (categoryRepository.existsByName(name)) {
-            throw new IllegalArgumentException("Category already exists.");
+            throw new BusinessRuleException("Category already exists.");
         }
 
         Category category = new Category(name.trim(), description);
@@ -32,20 +36,20 @@ public class CategoryService {
     }
 
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + id));
+        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
     }
 
     public Category updateCategory(Long id, String name, String description) {
         Category category = getCategoryById(id);
 
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Category name cannot be empty.");
+            throw new BusinessRuleException("Category name cannot be empty.");
         }
 
         String newName = name.trim();
 
         if (!category.getName().equalsIgnoreCase(newName) && categoryRepository.existsByName(newName)) {
-            throw new IllegalArgumentException("Category already exists.");
+            throw new DuplicateResourceException("Category already exists.");
         }
 
         category.setName(newName);
