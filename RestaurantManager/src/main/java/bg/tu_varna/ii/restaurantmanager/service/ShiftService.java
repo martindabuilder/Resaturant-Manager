@@ -67,5 +67,14 @@ public class ShiftService {
     }
 
     // gets the shifts
+    public List<Shift> getAllShifts() {
+        return shiftRepository.findAll();
+    }
 
+    // deletes a shift by its id
+    public void deleteShift(long shiftId) {
+        Shift shift = shiftRepository.findById(shiftId).orElseThrow(() -> new ResourceNotFoundException("Shift not found."));
+
+        shiftRepository.delete(shift);
+    }
 }
