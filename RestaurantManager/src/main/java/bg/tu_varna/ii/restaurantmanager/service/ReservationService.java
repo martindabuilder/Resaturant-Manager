@@ -3,7 +3,7 @@ package bg.tu_varna.ii.restaurantmanager.service;
 import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
 import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
-import bg.tu_varna.ii.restaurantmanager.model.entity.ReservationStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.ReservationStatus;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
 import bg.tu_varna.ii.restaurantmanager.repository.ReservationRepository;
 import bg.tu_varna.ii.restaurantmanager.repository.TableRepository;

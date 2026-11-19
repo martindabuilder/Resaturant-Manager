@@ -3,7 +3,7 @@ import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
 import bg.tu_varna.ii.restaurantmanager.exception.DuplicateResourceException;
 import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
-import bg.tu_varna.ii.restaurantmanager.model.entity.TableStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.TableStatus;
 import bg.tu_varna.ii.restaurantmanager.repository.TableRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;

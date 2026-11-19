@@ -1,7 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.model.dto.response;
 
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
-import bg.tu_varna.ii.restaurantmanager.model.entity.ReservationStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.ReservationStatus;
 import java.time.LocalDateTime;
 
 public class ReservationResponseDto {

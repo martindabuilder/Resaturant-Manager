@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.repository;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
-import bg.tu_varna.ii.restaurantmanager.model.entity.TableStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.TableStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;

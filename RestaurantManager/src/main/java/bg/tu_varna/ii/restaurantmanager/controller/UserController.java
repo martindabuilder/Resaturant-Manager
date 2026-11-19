@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.controller;
 
-import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.Role;
 import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import bg.tu_varna.ii.restaurantmanager.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;

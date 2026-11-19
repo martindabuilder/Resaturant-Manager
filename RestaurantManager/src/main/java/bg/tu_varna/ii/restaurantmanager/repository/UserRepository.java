@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.repository;
 
-import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.Role;
 import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

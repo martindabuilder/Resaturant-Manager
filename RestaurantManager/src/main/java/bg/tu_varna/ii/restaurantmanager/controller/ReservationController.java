@@ -2,7 +2,7 @@ package bg.tu_varna.ii.restaurantmanager.controller;
 
 import bg.tu_varna.ii.restaurantmanager.model.dto.response.ReservationResponseDto;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
-import bg.tu_varna.ii.restaurantmanager.model.entity.ReservationStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.ReservationStatus;
 import bg.tu_varna.ii.restaurantmanager.service.ReservationService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

@@ -1,8 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.repository;
 
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
-import bg.tu_varna.ii.restaurantmanager.model.entity.ReservationStatus;
-import org.springframework.cglib.core.Local;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

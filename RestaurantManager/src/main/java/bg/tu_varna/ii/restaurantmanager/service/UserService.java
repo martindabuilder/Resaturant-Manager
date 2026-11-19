@@ -2,7 +2,7 @@ package bg.tu_varna.ii.restaurantmanager.service;
 
 import bg.tu_varna.ii.restaurantmanager.exception.DuplicateResourceException;
 import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
-import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.Role;
 import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import bg.tu_varna.ii.restaurantmanager.repository.UserRepository;
 import org.springframework.security.core.Authentication;

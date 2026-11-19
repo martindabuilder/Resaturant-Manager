@@ -2,7 +2,7 @@ package bg.tu_varna.ii.restaurantmanager.controller;
 
 import bg.tu_varna.ii.restaurantmanager.model.dto.response.TableResponseDto;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
-import bg.tu_varna.ii.restaurantmanager.model.entity.TableStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.TableStatus;
 import bg.tu_varna.ii.restaurantmanager.service.TableService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.model.dto.response;
 
-import bg.tu_varna.ii.restaurantmanager.model.entity.Role;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.Role;
 import bg.tu_varna.ii.restaurantmanager.model.entity.User;
 import java.time.LocalDateTime;
 
