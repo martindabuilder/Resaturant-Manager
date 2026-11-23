@@ -262,22 +262,9 @@ public class OrderService {
         order.setStatus(OrderStatus.COMPLETED);
         orderRepository.save(order);
 
-        List<ReservationStatus> blockingStatuses = List.of(
-                ReservationStatus.PENDING,
-                ReservationStatus.CONFIRMED,
-                ReservationStatus.SEATED
-        );
-
-        boolean hasBlockingReservation = reservationRepository.existsBlockingReservation(
-                table.getId(),
-                java.time.LocalDateTime.now(),
-                blockingStatuses
-        );
-
-        if (!hasBlockingReservation) {
-            table.setStatus(TableStatus.AVAILABLE);
-            tableRepository.save(table);
-        }
+        table.setStatus(TableStatus.AVAILABLE);
+        tableRepository.save(table);
     }
+
 
 }

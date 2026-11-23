@@ -25,6 +25,7 @@ public class BillController {
 
     // get bill by its id
     @GetMapping("/{billId}")
+    @Transactional(readOnly = true)
     @PreAuthorize("hasAnyRole('WAITER', 'ADMIN', 'MANAGER')")
     public BillResponseDto getBillById(@PathVariable Long billId) {
         return new BillResponseDto(billService.getBillById(billId));
@@ -37,5 +38,14 @@ public class BillController {
     public BillResponseDto getBillByOrder(@PathVariable Long orderId) {
         return new BillResponseDto(billService.getBillByOrder(orderId));
     }
+
+    // Apply a discount to a bill
+    @PutMapping("/{billId}/discount/{discountId}")
+    @Transactional
+    @PreAuthorize("hasRole('MANAGER')")
+    public BillResponseDto applyDiscount(@PathVariable Long billId, @PathVariable Long discountId) {
+        return new BillResponseDto(billService.applyDiscount(billId, discountId));
+    }
+
 
 }

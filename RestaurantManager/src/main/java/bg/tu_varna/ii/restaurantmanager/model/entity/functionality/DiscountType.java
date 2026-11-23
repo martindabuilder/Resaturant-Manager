@@ -1,5 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.model.entity.functionality;
 
-public enum Discount {
-
+public enum DiscountType {
+    FIXED_AMOUNT,
+    PERCENTAGE
 }
