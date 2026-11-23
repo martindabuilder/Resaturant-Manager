@@ -35,8 +35,7 @@ public class BillService {
         }
 
         BigDecimal totalAmount = BigDecimal.ZERO;
-
-
+        
         // calculating the total amount for all the items
         for (OrderItem item : order.getItems()) {
             if (item.getStatus() != OrderItemStatus.CANCELLED) {

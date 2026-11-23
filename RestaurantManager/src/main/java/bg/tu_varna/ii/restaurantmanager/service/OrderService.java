@@ -2,10 +2,7 @@ package bg.tu_varna.ii.restaurantmanager.service;
 import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
 import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.*;
-import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderItemStatus;
-import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderStatus;
-import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.Role;
-import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.TableStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.*;
 import bg.tu_varna.ii.restaurantmanager.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -20,13 +17,15 @@ public class OrderService {
     private final TableRepository tableRepository;
     private final UserRepository userRepository;
     private final DishRepository dishRepository;
+    private final ReservationRepository reservationRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, TableRepository tableRepository, UserRepository userRepository, DishRepository dishRepository) {
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, TableRepository tableRepository, UserRepository userRepository, DishRepository dishRepository, ReservationRepository reservationRepository) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.tableRepository = tableRepository;
         this.userRepository = userRepository;
         this.dishRepository = dishRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     // create a new order
@@ -193,6 +192,7 @@ public class OrderService {
         }
     }
 
+    // updates the status of an item from the menu, used by the chef
     public OrderItem updateOrderItemStatus(Long itemId, OrderItemStatus newStatus) {
         if (newStatus == null) {
             throw new BusinessRuleException("New status cannot be null.");
@@ -227,6 +227,36 @@ public class OrderService {
         orderRepository.save(order);
 
         return item;
+    }
+
+    // automatically marks a paid order as COMPLETED
+    public void completeOrder(Long orderId) {
+        RestaurantOrder order = getOrderById(orderId);
+
+        if (order.getStatus() != OrderStatus.READY) {
+            throw new BusinessRuleException("Only ready orders can be completed.");
+        }
+
+        RestaurantTable table = order.getTable();
+        order.setStatus(OrderStatus.COMPLETED);
+        orderRepository.save(order);
+
+        List<ReservationStatus> blockingStatuses = List.of(
+                ReservationStatus.PENDING,
+                ReservationStatus.CONFIRMED,
+                ReservationStatus.SEATED
+        );
+
+        boolean hasBlockingReservation = reservationRepository.existsBlockingReservation(
+                table.getId(),
+                java.time.LocalDateTime.now(),
+                blockingStatuses
+        );
+
+        if (!hasBlockingReservation) {
+            table.setStatus(TableStatus.AVAILABLE);
+            tableRepository.save(table);
+        }
     }
 
 }

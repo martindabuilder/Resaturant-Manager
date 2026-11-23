@@ -16,10 +16,12 @@ import java.time.LocalDateTime;
 public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final BillService billService;
+    private final OrderService orderService;
 
-    public PaymentService(PaymentRepository paymentRepository, BillService billService) {
+    public PaymentService(PaymentRepository paymentRepository, BillService billService, OrderService orderService) {
         this.paymentRepository = paymentRepository;
         this.billService = billService;
+        this.orderService = orderService;
     }
 
     // create payment for a bill
@@ -58,11 +60,14 @@ public class PaymentService {
 
     // mark successfully paid payments
     public Payment markPaymentAsPaid(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new BusinessRuleException("Payment not found."));
+        Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new ResourceNotFoundException("Payment not found."));
 
-        if(payment.getPaymentStatus() != PaymentStatus.PENDING) {
+        if (payment.getPaymentStatus() != PaymentStatus.PENDING) {
             throw new BusinessRuleException("Only pending payments can be marked as paid.");
         }
+
+        Long orderId = payment.getBill().getOrder().getId();
+        orderService.completeOrder(orderId);
 
         payment.setPaidAt(LocalDateTime.now());
         payment.setPaymentStatus(PaymentStatus.PAID);

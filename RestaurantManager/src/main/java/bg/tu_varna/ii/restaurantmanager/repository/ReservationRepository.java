@@ -20,4 +20,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     // checks for overlapping reservations
     @Query("SELECT COUNT(r) > 0 FROM Reservation r WHERE r.table.id = :tableId AND r.status IN :statuses AND r.startTime < :endTime AND r.endTime > :startTime")
     boolean existsOverlappingReservation(@Param("tableId") Long tableId, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime, @Param("statuses") List<ReservationStatus> statuses);
+
+    @Query(" SELECT COUNT(r) > 0 FROM Reservation r WHERE r.table.id = :tableId AND r.status IN :statuses AND r.endTime > :currentTime")
+    boolean existsBlockingReservation(@Param("tableId") Long tableId, @Param("currentTime") LocalDateTime currentTime, @Param("statuses") List<ReservationStatus> statuses);
 }
