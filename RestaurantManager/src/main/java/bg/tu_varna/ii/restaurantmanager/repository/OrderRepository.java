@@ -1,5 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.repository;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantOrder;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderStatus;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
@@ -37,4 +38,6 @@ public interface OrderRepository extends JpaRepository<RestaurantOrder, Long> {
             "items.dish"
     })
     List<RestaurantOrder> findByWaiter_Id(Long waiterId);
+
+    boolean existsByTable_IdAndStatusIn(Long tableId, List<OrderStatus> statuses);
 }

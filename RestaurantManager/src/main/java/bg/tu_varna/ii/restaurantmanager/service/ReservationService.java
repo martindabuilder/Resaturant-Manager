@@ -1,15 +1,16 @@
 package bg.tu_varna.ii.restaurantmanager.service;
-
 import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
 import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
-import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.ReservationStatus;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.ReservationStatus;
+import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.TableStatus;
+import bg.tu_varna.ii.restaurantmanager.repository.OrderRepository;
 import bg.tu_varna.ii.restaurantmanager.repository.ReservationRepository;
 import bg.tu_varna.ii.restaurantmanager.repository.TableRepository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,13 +18,15 @@ import java.util.List;
 public class ReservationService {
     private final TableRepository tableRepository;
     private final ReservationRepository reservationRepository;
+    private final OrderRepository orderRepository;
 
-    public ReservationService(TableRepository tableRepository, ReservationRepository reservationRepository) {
+    public ReservationService(TableRepository tableRepository, ReservationRepository reservationRepository, OrderRepository orderRepository) {
         this.tableRepository = tableRepository;
         this.reservationRepository = reservationRepository;
+        this.orderRepository = orderRepository;
     }
 
-    // handles the reservation creation and all of the checks for it
+    // Creates a reservation and checks all required conditions
     @Transactional
     public Reservation createReservation(Long tableId, String customerName, String phoneNumber, Integer guestCount, LocalDateTime startTime, LocalDateTime endTime) {
 
@@ -74,39 +77,91 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    // gets all the reservations
+    // Gets all reservations
     @Transactional(readOnly = true)
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 
-    // gets the reserv. by its id
+    // Gets a reservation by ID
     @Transactional(readOnly = true)
     public Reservation getReservationById(Long id) {
-        return reservationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reservation not found."));
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found."));
     }
 
-    // gets the reserv. by the table
+    // Gets reservations by table
     @Transactional(readOnly = true)
     public List<Reservation> getReservationsByTable(Long tableId) {
         return reservationRepository.findByTable_Id(tableId);
     }
 
-    // gets the reserv. by its status
+    // Gets reservations by status
     @Transactional(readOnly = true)
     public List<Reservation> getReservationsByStatus(ReservationStatus status) {
         return reservationRepository.findByStatus(status);
     }
 
-    // gets a reserv. by the name of the customer
+    // Searches reservations by customer name
     @Transactional(readOnly = true)
     public List<Reservation> searchReservationsByCustomerName(String customerName) {
         return reservationRepository.findByCustomerNameContainingIgnoreCase(customerName);
     }
 
-    // gets reserv. by the phone number attached to it
+    // Gets reservations by phone number
     @Transactional(readOnly = true)
     public List<Reservation> getReservationsByPhoneNumber(String phoneNumber) {
         return reservationRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    // Updates reservation status and synchronizes table status
+    @Transactional
+    public Reservation updateReservationStatus(Long reservationId, ReservationStatus newStatus) {
+        if (newStatus == null) {
+            throw new BusinessRuleException("New reservation status cannot be null.");
+        }
+
+        Reservation reservation = reservationRepository.findWithTableById(reservationId).orElseThrow(() -> new ResourceNotFoundException("Reservation not found."));
+
+        ReservationStatus currentStatus = reservation.getStatus();
+
+        boolean validTransition = switch (currentStatus) {
+            case PENDING -> newStatus == ReservationStatus.CONFIRMED || newStatus == ReservationStatus.CANCELLED;
+            case CONFIRMED -> newStatus == ReservationStatus.SEATED || newStatus == ReservationStatus.CANCELLED;
+            case SEATED -> newStatus == ReservationStatus.COMPLETED;
+            case COMPLETED, CANCELLED -> false;
+        };
+
+        if (!validTransition) {
+            throw new BusinessRuleException("Invalid reservation status transition.");
+        }
+
+        RestaurantTable table = reservation.getTable();
+
+        // When the guests are seated, the table becomes occupied
+        if (newStatus == ReservationStatus.SEATED) {
+            table.setStatus(TableStatus.OCCUPIED);
+            tableRepository.save(table);
+        }
+
+        // When the reservation is completed, check for unfinished orders and other active reservations
+        if (newStatus == ReservationStatus.COMPLETED) {
+            List<OrderStatus> unfinishedStatuses = List.of(OrderStatus.OPEN, OrderStatus.IN_PROGRESS, OrderStatus.READY);
+
+            boolean hasUnfinishedOrder = orderRepository.existsByTable_IdAndStatusIn(table.getId(), unfinishedStatuses);
+
+            List<ReservationStatus> blockingStatuses = List.of(ReservationStatus.PENDING, ReservationStatus.CONFIRMED, ReservationStatus.SEATED);
+
+            boolean hasOtherActiveReservation = reservationRepository.existsOtherBlockingReservation(table.getId(), reservation.getId(), LocalDateTime.now(), blockingStatuses);
+
+            if (!hasUnfinishedOrder && !hasOtherActiveReservation) {
+                table.setStatus(TableStatus.AVAILABLE);
+                tableRepository.save(table);
+            }
+        }
+
+        reservation.setStatus(newStatus);
+
+        return reservationRepository.save(reservation);
     }
 }

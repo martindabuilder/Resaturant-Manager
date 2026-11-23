@@ -51,8 +51,13 @@ public class OrderService {
             throw new BusinessRuleException("Cannot create an order for a reserved table.");
         }
 
-        // potentially removed later maybe
-        // as a table could realistically make orders at different points of the night
+        List<ReservationStatus> blockingStatuses = List.of(ReservationStatus.PENDING, ReservationStatus.CONFIRMED, ReservationStatus.SEATED);
+        boolean hasActiveReservation = reservationRepository.existsBlockingReservation(table.getId(), java.time.LocalDateTime.now(), blockingStatuses);
+
+        if (hasActiveReservation) {
+            throw new BusinessRuleException("Cannot create an order for a table with an active reservation.");
+        }
+
         if (table.getStatus() == TableStatus.OCCUPIED) {
             throw new BusinessRuleException("Table is already occupied.");
         }

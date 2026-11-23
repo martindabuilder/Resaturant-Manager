@@ -72,4 +72,14 @@ public class ReservationController {
     public List<ReservationResponseDto> getReservationsByPhoneNumber(@RequestParam String phoneNumber) {
         return reservationService.getReservationsByPhoneNumber(phoneNumber).stream().map(ReservationResponseDto::new).toList();
     }
+
+    // update reservation status
+    @PutMapping("/{id}/status")
+    @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ReservationResponseDto updateReservationStatus(@PathVariable Long id, @RequestParam ReservationStatus status) {
+        Reservation reservation = reservationService.updateReservationStatus(id, status);
+        return new ReservationResponseDto(reservation);
+    }
+
 }
