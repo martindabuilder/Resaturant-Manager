@@ -72,7 +72,7 @@ public class OrderController {
 
     // update the item status in an order, accessible only to a chef only
     @PatchMapping("/items/{itemId}/status")
-    @PreAuthorize("hasRole('CHEF')")
+    @PreAuthorize("hasAnyRole('CHEF', 'WAITER')")
     public OrderItemResponseDto updateOrderItemStatus(@PathVariable Long itemId, @RequestParam OrderItemStatus status) {
         return new OrderItemResponseDto(orderService.updateOrderItemStatus(itemId, status));
     }

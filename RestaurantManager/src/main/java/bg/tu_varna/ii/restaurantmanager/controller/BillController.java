@@ -3,6 +3,7 @@ import bg.tu_varna.ii.restaurantmanager.model.dto.response.BillResponseDto;
 import bg.tu_varna.ii.restaurantmanager.service.BillService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,8 +32,10 @@ public class BillController {
 
     // get a bill by its order id
     @GetMapping("/order/{orderId}")
+    @Transactional(readOnly = true)
     @PreAuthorize("hasAnyRole('WAITER', 'ADMIN', 'MANAGER')")
     public BillResponseDto getBillByOrder(@PathVariable Long orderId) {
         return new BillResponseDto(billService.getBillByOrder(orderId));
     }
+
 }

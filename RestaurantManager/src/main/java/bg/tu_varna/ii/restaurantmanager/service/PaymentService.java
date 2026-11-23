@@ -8,7 +8,6 @@ import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.PaymentStatus
 import bg.tu_varna.ii.restaurantmanager.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -24,32 +23,29 @@ public class PaymentService {
         this.orderService = orderService;
     }
 
-    // create payment for a bill
-    public Payment createPayment(Long billId, BigDecimal amount, PaymentMethod paymentMethod) {
+    // automatically create payment for a bill
+    public Payment createPayment(Long billId, PaymentMethod paymentMethod) {
         Bill bill = billService.getBillById(billId);
-
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessRuleException("Payment amount must be greater than zero.");
-        }
 
         if (paymentMethod == null) {
             throw new BusinessRuleException("Must choose a payment method.");
         }
 
-        if (amount.compareTo(bill.getTotalAmount()) != 0) {
-            throw new BusinessRuleException("Payment amount must equal the total bill amount.");
+        if (bill.getTotalAmount() == null || bill.getTotalAmount().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            throw new BusinessRuleException("Bill amount must be greater than zero.");
         }
 
         boolean paymentAlreadyExists = paymentRepository.findByBill_Id(billId).stream()
                 .anyMatch(payment ->
                         payment.getPaymentStatus() == PaymentStatus.PENDING ||
-                        payment.getPaymentStatus() == PaymentStatus.PAID);
+                                payment.getPaymentStatus() == PaymentStatus.PAID);
 
         if (paymentAlreadyExists) {
             throw new BusinessRuleException("A pending or completed payment already exists for this order.");
         }
 
-        Payment payment = new Payment(paymentMethod, PaymentStatus.PENDING, bill, amount);
+        Payment payment = new Payment(paymentMethod, PaymentStatus.PENDING, bill, bill.getTotalAmount());
+
         return paymentRepository.save(payment);
     }
 

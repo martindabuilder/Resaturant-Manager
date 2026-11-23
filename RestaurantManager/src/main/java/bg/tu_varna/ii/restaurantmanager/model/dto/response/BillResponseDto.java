@@ -22,7 +22,7 @@ public class BillResponseDto {
 
     public LocalDateTime getCreatedAt() {return createdAt;}
 
-    public BigDecimal getTableAmount() {return totalAmount;}
+    public BigDecimal getTotalAmount() {return totalAmount;}
 
     public Long getOrderId() {return orderId;}
 

@@ -5,6 +5,8 @@ import bg.tu_varna.ii.restaurantmanager.model.entity.*;
 import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.*;
 import bg.tu_varna.ii.restaurantmanager.repository.*;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
@@ -171,7 +173,7 @@ public class OrderService {
             return;
         }
 
-        boolean allReady = activeItems.stream().allMatch(item -> item.getStatus() == OrderItemStatus.READY);
+        boolean allReady = activeItems.stream().allMatch(item -> item.getStatus() == OrderItemStatus.READY || item.getStatus() == OrderItemStatus.SERVED);
 
         if (allReady) {
             order.setStatus(OrderStatus.READY);
@@ -181,8 +183,9 @@ public class OrderService {
         boolean anyStarted = activeItems.stream()
                 .anyMatch(item ->
                         item.getStatus() == OrderItemStatus.ACCEPTED ||
-                        item.getStatus() == OrderItemStatus.PREPARING ||
-                        item.getStatus() == OrderItemStatus.READY
+                                item.getStatus() == OrderItemStatus.PREPARING ||
+                                item.getStatus() == OrderItemStatus.READY ||
+                                item.getStatus() == OrderItemStatus.SERVED
                 );
 
         if (anyStarted) {
@@ -198,6 +201,23 @@ public class OrderService {
             throw new BusinessRuleException("New status cannot be null.");
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+
+        Role currentRole = currentUser.getRole();
+
+        if (newStatus == OrderItemStatus.SERVED && currentRole != Role.WAITER) {
+            throw new BusinessRuleException("Only waiters can mark items as served.");
+        }
+
+        if (newStatus != OrderItemStatus.SERVED && currentRole != Role.CHEF) {
+            throw new BusinessRuleException("Only chefs can update preparation statuses.");
+        }
+
         OrderItem item = orderItemRepository.findWithDetailsById(itemId).orElseThrow(() -> new ResourceNotFoundException("Order item not found."));
         RestaurantOrder order = item.getOrder();
 
@@ -209,12 +229,13 @@ public class OrderService {
             throw new BusinessRuleException("Current item status cannot be null.");
         }
 
-        boolean validTransition = switch (item.getStatus()) {
+        boolean validTransition = switch(item.getStatus()) {
             case NEW -> newStatus == OrderItemStatus.ACCEPTED || newStatus == OrderItemStatus.CANCELLED;
             case ACCEPTED ->  newStatus == OrderItemStatus.PREPARING || newStatus == OrderItemStatus.CANCELLED;
             case PREPARING ->  newStatus == OrderItemStatus.READY || newStatus == OrderItemStatus.CANCELLED;
 
-            case READY, CANCELLED -> false;
+            case READY -> newStatus == OrderItemStatus.SERVED;
+            case SERVED, CANCELLED -> false;
         };
 
         if (!validTransition) {

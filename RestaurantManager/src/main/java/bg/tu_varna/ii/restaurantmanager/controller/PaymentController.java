@@ -20,8 +20,8 @@ public class PaymentController {
     @PostMapping("/bill/{billId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('WAITER')")
-    public PaymentResponseDto createPayment(@PathVariable Long billId, @RequestParam BigDecimal amount, @RequestParam PaymentMethod method) {
-        return new PaymentResponseDto(paymentService.createPayment(billId, amount, method));
+    public PaymentResponseDto createPayment(@PathVariable Long billId, @RequestParam PaymentMethod method) {
+        return new PaymentResponseDto(paymentService.createPayment(billId, method));
     }
 
     // marks a payment as paid
