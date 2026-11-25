@@ -1,7 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
-import bg.tu_varna.ii.restaurantmanager.model.dto.response.CurrentOrderReportDto;
-import bg.tu_varna.ii.restaurantmanager.model.dto.response.TableOccupancyReportDto;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.reports.CurrentOrderReportDto;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.reports.TableOccupancyReportDto;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantOrder;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
 import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderStatus;

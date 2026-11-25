@@ -1,12 +1,12 @@
-package bg.tu_varna.ii.restaurantmanager.model.dto.response;
+package bg.tu_varna.ii.restaurantmanager.model.dto.response.reports;
 
 import java.math.BigDecimal;
 
 public class DishSalesReportDto {
-    private Long dishId;
-    private String dishName;
-    private Integer totalQuantity;
-    private BigDecimal totalRevenue;
+    private final Long dishId;
+    private final String dishName;
+    private final Integer totalQuantity;
+    private final BigDecimal totalRevenue;
 
     public DishSalesReportDto(Long dishId, String dishName, Integer totalQuantity, BigDecimal totalRevenue) {
         this.dishId = dishId;

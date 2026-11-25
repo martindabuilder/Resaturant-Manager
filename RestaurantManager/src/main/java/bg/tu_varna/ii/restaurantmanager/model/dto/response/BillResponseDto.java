@@ -17,7 +17,6 @@ public class BillResponseDto {
     private final String discountName;
     private final DiscountType discountType;
     private final BigDecimal discountValue;
-
     private final LocalDateTime createdAt;
 
     public BillResponseDto(Bill bill) {

@@ -1,11 +1,11 @@
-package bg.tu_varna.ii.restaurantmanager.model.dto.response;
+package bg.tu_varna.ii.restaurantmanager.model.dto.response.reports;
 import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.TableStatus;
 
 public class TableOccupancyReportDto {
-    private Long tableId;
-    private Integer tableNumber;
-    private Integer capacity;
-    private TableStatus status;
+    private final Long tableId;
+    private final Integer tableNumber;
+    private final Integer capacity;
+    private final TableStatus status;
 
     public TableOccupancyReportDto(Long tableId, Integer tableNumber, Integer capacity, TableStatus status) {
         this.tableId = tableId;

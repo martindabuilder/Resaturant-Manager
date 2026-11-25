@@ -1,13 +1,13 @@
-package bg.tu_varna.ii.restaurantmanager.model.dto.response;
+package bg.tu_varna.ii.restaurantmanager.model.dto.response.reports;
 import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderStatus;
 import java.time.LocalDateTime;
 
 public class CurrentOrderReportDto {
-    private Long orderId;
-    private Integer tableNumber;
-    private String waiterName;
-    private OrderStatus status;
-    private LocalDateTime createdAt;
+    private final Long orderId;
+    private final Integer tableNumber;
+    private final String waiterName;
+    private final OrderStatus status;
+    private final LocalDateTime createdAt;
 
     public CurrentOrderReportDto(Long orderId, Integer tableNumber, String waiterName, OrderStatus status, LocalDateTime createdAt) {
         this.orderId = orderId;

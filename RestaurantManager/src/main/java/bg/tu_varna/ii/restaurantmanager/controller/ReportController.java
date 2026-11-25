@@ -1,6 +1,6 @@
 package bg.tu_varna.ii.restaurantmanager.controller;
-import bg.tu_varna.ii.restaurantmanager.model.dto.response.CurrentOrderReportDto;
-import bg.tu_varna.ii.restaurantmanager.model.dto.response.TableOccupancyReportDto;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.reports.CurrentOrderReportDto;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.reports.TableOccupancyReportDto;
 import bg.tu_varna.ii.restaurantmanager.service.ReportService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
