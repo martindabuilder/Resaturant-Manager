@@ -2,13 +2,13 @@ package bg.tu_varna.ii.restaurantmanager.model.dto.response.reports;
 import java.math.BigDecimal;
 
 public class WaiterSalesReportDto {
-    private Long waiterId;
-    private String waiterName;
-    private Long totalOrders;
-    private Integer totalQuantity;
-    private BigDecimal totalRevenue;
+    private final Long waiterId;
+    private final String waiterName;
+    private final Long totalOrders;
+    private final Long totalQuantity;
+    private final BigDecimal totalRevenue;
 
-    public WaiterSalesReportDto(Long waiterId, String waiterName, Long totalOrders, Integer totalQuantity, BigDecimal totalRevenue) {
+    public WaiterSalesReportDto(Long waiterId, String waiterName, Long totalOrders, Long totalQuantity, BigDecimal totalRevenue) {
         this.waiterId = waiterId;
         this.waiterName = waiterName;
         this.totalOrders = totalOrders;
@@ -22,7 +22,7 @@ public class WaiterSalesReportDto {
 
     public Long getTotalOrders() {return totalOrders;}
 
-    public Integer getTotalQuantity() {return totalQuantity;}
+    public Long getTotalQuantity() {return totalQuantity;}
 
     public BigDecimal getTotalRevenue() {return totalRevenue;}
 }

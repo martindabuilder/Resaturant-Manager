@@ -4,11 +4,10 @@ import java.math.BigDecimal;
 public class CategorySalesReportDto {
     private final Long categoryId;
     private final String categoryName;
-    private final Integer totalQuantity;
+    private final Long totalQuantity;
     private final BigDecimal totalRevenue;
 
-    public CategorySalesReportDto(Long categoryId, String categoryName, Integer totalQuantity, BigDecimal totalRevenue) {
-
+    public CategorySalesReportDto(Long categoryId, String categoryName, Long totalQuantity, BigDecimal totalRevenue) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.totalQuantity = totalQuantity;
@@ -19,7 +18,7 @@ public class CategorySalesReportDto {
 
     public String getCategoryName() {return categoryName;}
 
-    public Integer getTotalQuantity() {return totalQuantity;}
+    public Long getTotalQuantity() {return totalQuantity;}
 
     public BigDecimal getTotalRevenue() {return totalRevenue;}
 }
