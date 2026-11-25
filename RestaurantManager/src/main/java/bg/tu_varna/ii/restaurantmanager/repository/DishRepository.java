@@ -1,5 +1,4 @@
 package bg.tu_varna.ii.restaurantmanager.repository;
-
 import bg.tu_varna.ii.restaurantmanager.model.entity.Dish;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

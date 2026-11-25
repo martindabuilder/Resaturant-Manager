@@ -21,13 +21,17 @@ public class OrderService {
     private final DishRepository dishRepository;
     private final ReservationRepository reservationRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, TableRepository tableRepository, UserRepository userRepository, DishRepository dishRepository, ReservationRepository reservationRepository) {
+    // used for the notifications once an order is ready
+    private final NotificationService notificationService;
+
+    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, TableRepository tableRepository, UserRepository userRepository, DishRepository dishRepository, ReservationRepository reservationRepository, NotificationService notificationService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.tableRepository = tableRepository;
         this.userRepository = userRepository;
         this.dishRepository = dishRepository;
         this.reservationRepository = reservationRepository;
+        this.notificationService = notificationService;
     }
 
     // create a new order
@@ -207,7 +211,6 @@ public class OrderService {
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         String username = authentication.getName();
 
         User currentUser = userRepository.findByUsername(username)
@@ -251,6 +254,12 @@ public class OrderService {
         updateOrderStatus(order);
         orderItemRepository.save(item);
         orderRepository.save(order);
+        OrderStatus previousOrderStatus = order.getStatus();
+
+        if (previousOrderStatus != OrderStatus.READY && order.getStatus() == OrderStatus.READY) {
+            System.out.println("ORDER READY NOTIFICATION TRIGGERED!");
+            notificationService.createNotification(order.getWaiter().getId(), "Order #" + order.getId() + " is ready to be served.", NotificationType.ORDER_READY);
+        }
 
         return item;
     }
