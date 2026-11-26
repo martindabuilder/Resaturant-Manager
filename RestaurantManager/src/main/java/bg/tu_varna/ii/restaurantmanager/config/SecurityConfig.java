@@ -57,6 +57,9 @@ public class SecurityConfig {
                                 "/login",
                                 "/tables-selection",
                                 "/menu",
+                                "/cart",
+                                "/cart/**",
+                                "/order-success",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"

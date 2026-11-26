@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Количка - Restaurant Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main>
+    <h1>Restaurant Manager</h1>
+    <h2>Твоята количка</h2>
+
+    <p>
+        Избрана маса:
+        <strong th:text="${tableId}">1</strong>
+    </p>
+
+    <div th:if="${#maps.isEmpty(cartItems)}">
+        <p>Количката е празна.</p>
+    </div>
+
+    <div th:unless="${#maps.isEmpty(cartItems)}">
+
+        <table>
+            <thead>
+            <tr>
+                <th>Ястие</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Общо</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dish : ${cartDishes}">
+                <td th:text="${dish.name}">Име</td>
+
+                <td>
+                    <span th:text="${dish.price}">10.00</span> лв.
+                </td>
+
+                <td th:text="${cartItems[dish.id]}">1</td>
+
+                <td>
+                    <span th:text="${subtotals[dish.id]}">10.00</span>
+                </td>
+
+                <td>
+                    <form th:action="@{/cart/remove}" method="post">
+                        <input type="hidden"
+                               name="tableId"
+                               th:value="${tableId}">
+
+                        <input type="hidden"
+                               name="dishId"
+                               th:value="${dish.id}">
+
+                        <button type="submit">Премахни</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>
+            Обща сума:
+            <span th:text="${total}">0.00</span> лв.
+        </h3>
+        <form th:action="@{/cart/submit}" method="post">
+            <input type="hidden" name="tableId" th:value="${tableId}">
+            <button type="submit">Завърши поръчката</button>
+        </form>
+
+    </div>
+
+    <p>
+        <a th:href="@{/menu(tableId=${tableId})}">
+            Назад към менюто
+        </a>
+    </p>
+
+</main>
+
+</body>
+</html>

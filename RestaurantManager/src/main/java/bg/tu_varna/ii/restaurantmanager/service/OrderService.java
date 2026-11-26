@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -338,5 +339,25 @@ public class OrderService {
         tableRepository.save(table);
 
         return orderRepository.save(order);
+    }
+
+    // submits a complete order from the customer's cart
+    public RestaurantOrder submitCustomerOrder(
+            Long tableId,
+            Map<Long, Integer> cartItems) {
+
+        if (cartItems == null || cartItems.isEmpty()) {
+            throw new BusinessRuleException("The cart is empty.");
+        }
+
+        // Create the order and automatically assign a waiter
+        RestaurantOrder order = createCustomerOrder(tableId);
+
+        // Add all dishes from the cart
+        for (Map.Entry<Long, Integer> entry : cartItems.entrySet()) {
+            addItem(order.getId(), entry.getKey(), entry.getValue());
+        }
+
+        return getOrderById(order.getId());
     }
 }

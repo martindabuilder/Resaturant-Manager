@@ -3,6 +3,7 @@ package bg.tu_varna.ii.restaurantmanager.controller;
 
 import bg.tu_varna.ii.restaurantmanager.service.CategoryService;
 import bg.tu_varna.ii.restaurantmanager.service.DishService;
+import bg.tu_varna.ii.restaurantmanager.service.OrderService;
 import bg.tu_varna.ii.restaurantmanager.service.TableService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -16,13 +17,18 @@ public class PageController {
     private final TableService tableService;
     private final DishService dishService;
     private final CategoryService categoryService;
+    private final OrderService orderService;
 
-    public PageController(TableService tableService,
-                          DishService dishService,
-                          CategoryService categoryService) {
+    public PageController(
+            TableService tableService,
+            DishService dishService,
+            CategoryService categoryService,
+            OrderService orderService) {
+
         this.tableService = tableService;
         this.dishService = dishService;
         this.categoryService = categoryService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/")
@@ -61,5 +67,18 @@ public class PageController {
         model.addAttribute("tableId", tableId);
 
         return "menu";
+    }
+
+    @GetMapping("/order-success")
+    public String orderSuccess(
+            @RequestParam Long orderId,
+            Model model) {
+
+        var order = orderService.getOrderById(orderId);
+
+        model.addAttribute("orderId", order.getId());
+        model.addAttribute("tableNumber", order.getTable().getTableNumber());
+
+        return "order-success";
     }
 }

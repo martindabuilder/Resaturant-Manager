@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Успешна поръчка - Restaurant Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main>
+    <h1>Restaurant Manager</h1>
+
+    <h2>Поръчката е приета успешно!</h2>
+
+    <p>Благодарим Ви за поръчката!</p>
+
+    <p>
+        Номер на поръчката:
+        <strong th:text="${orderId}">1</strong>
+    </p>
+
+    <p>
+        Маса:
+        <strong th:text="${tableNumber}">1</strong>
+    </p>
+
+    <p>Персоналът на ресторанта ще се погрижи за Вашата поръчка.</p>
+
+    <a th:href="@{/}">Към началната страница</a>
+</main>
+</body>
+</html>

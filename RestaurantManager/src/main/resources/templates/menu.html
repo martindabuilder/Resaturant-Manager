@@ -18,6 +18,12 @@
         <strong th:text="${tableId}">1</strong>
     </p>
 
+    <p>
+        <a th:href="@{/cart(tableId=${tableId})}">
+            Прегледай количката
+        </a>
+    </p>
+
     <div th:if="${#lists.isEmpty(categories)}">
         <p>В момента няма активни категории.</p>
     </div>
@@ -50,11 +56,30 @@
                     <strong th:text="${dish.price}">10.00</strong> лв.
                 </p>
 
-                <p th:if="${dish.available}" class="available-status">
+                <p th:if="${dish.available}"
+                   class="available-status">
                     Налично
                 </p>
 
-                <p th:unless="${dish.available}" class="unavailable-status">
+                <form th:if="${dish.available}"
+                      th:action="@{/cart/add}"
+                      method="post">
+
+                    <input type="hidden"
+                           name="tableId"
+                           th:value="${tableId}">
+
+                    <input type="hidden"
+                           name="dishId"
+                           th:value="${dish.id}">
+
+                    <button type="submit">
+                        Добави в количката
+                    </button>
+                </form>
+
+                <p th:unless="${dish.available}"
+                   class="unavailable-status">
                     Временно неналично
                 </p>
 
