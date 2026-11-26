@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Резервации - Restaurant Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main>
+    <h1>Restaurant Manager</h1>
+    <h2>Резервации на ресторанта</h2>
+
+    <p th:if="${#lists.isEmpty(reservations)}">
+        В момента няма регистрирани резервации.
+    </p>
+
+    <table th:unless="${#lists.isEmpty(reservations)}">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Клиент</th>
+            <th>Телефон</th>
+            <th>Маса</th>
+            <th>Брой гости</th>
+            <th>Начало</th>
+            <th>Край</th>
+            <th>Статус</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="reservation : ${reservations}">
+            <td th:text="${reservation.id}"></td>
+            <td th:text="${reservation.customerName}"></td>
+            <td th:text="${reservation.phoneNumber}"></td>
+            <td th:text="${reservation.tableNumber}"></td>
+            <td th:text="${reservation.guestCount}"></td>
+            <td th:text="${reservation.startTime}"></td>
+            <td th:text="${reservation.endTime}"></td>
+            <td th:text="${reservation.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <a th:href="@{/dashboard}">Назад към таблото</a>
+    </p>
+</main>
+
+</body>
+</html>

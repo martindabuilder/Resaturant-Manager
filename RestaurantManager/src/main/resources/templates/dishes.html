@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление на ястия</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<main>
+
+    <h1>Управление на ястия</h1>
+
+    <p>
+        <a th:href="@{/dashboard}">← Обратно към таблото</a>
+    </p>
+
+    <hr>
+
+    <h2>Търсене и филтриране</h2>
+
+    <form th:action="@{/dishes}" method="get">
+
+        <label>Име на ястие:</label>
+        <input type="text" name="name" th:value="${name}"
+               placeholder="Въведи име">
+
+        <label>Категория:</label>
+        <select name="categoryId">
+            <option value="">Всички категории</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    th:selected="${categoryId != null and categoryId.equals(category.id)}">
+            </option>
+        </select>
+
+        <label>Наличност:</label>
+        <select name="available">
+            <option value="">Всички</option>
+            <option value="true" th:selected="${available == true}">Налично</option>
+            <option value="false" th:selected="${available == false}">Неналично</option>
+        </select>
+
+        <button type="submit">Търси</button>
+        <a th:href="@{/dishes}">Изчисти</a>
+
+    </form>
+
+    <hr>
+
+    <section sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+
+        <h2>Добавяне на ново ястие</h2>
+
+        <form th:action="@{/dishes/create}" method="post">
+
+            <p>
+                <label>Име:</label><br>
+                <input type="text" name="name" maxlength="100" required>
+            </p>
+
+            <p>
+                <label>Описание:</label><br>
+                <textarea name="description" maxlength="500"></textarea>
+            </p>
+
+            <p>
+                <label>Грамаж (г):</label><br>
+                <input type="number" name="weight" min="1" required>
+            </p>
+
+            <p>
+                <label>Цена:</label><br>
+                <input type="number" name="price" min="0" step="0.01" required>
+            </p>
+
+            <p>
+                <label>Категория:</label><br>
+                <select name="categoryId" required>
+                    <option value="">Избери категория</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}">
+                    </option>
+                </select>
+            </p>
+
+            <p>
+                <label>Количество:</label><br>
+                <input type="number" name="quantity" min="0" required>
+            </p>
+
+            <button type="submit">Добави ястие</button>
+
+        </form>
+
+    </section>
+
+    <hr>
+
+    <h2>Списък с ястия</h2>
+
+    <p th:if="${#lists.isEmpty(dishes)}">
+        Няма намерени ястия.
+    </p>
+
+    <table th:unless="${#lists.isEmpty(dishes)}">
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Име</th>
+            <th>Описание</th>
+            <th>Категория</th>
+            <th>Грамаж</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Наличност</th>
+            <th>Активно</th>
+            <th>Създадено на</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="dish : ${dishes}">
+
+            <td th:text="${dish.id}"></td>
+            <td th:text="${dish.name}"></td>
+            <td th:text="${dish.description}"></td>
+            <td th:text="${dish.categoryName}"></td>
+            <td th:text="${dish.weight} + ' г'"></td>
+            <td th:text="${dish.price} + ' лв.'"></td>
+            <td th:text="${dish.quantity}"></td>
+
+            <td>
+                <span th:if="${dish.available}" class="available-status">
+                    Налично
+                </span>
+                <span th:unless="${dish.available}" class="unavailable-status">
+                    Неналично
+                </span>
+            </td>
+
+            <td th:text="${dish.active ? 'Да' : 'Не'}"></td>
+            <td th:text="${dish.createdAt}"></td>
+
+            <td>
+
+                <details sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                    <summary>Редактирай</summary>
+
+                    <form th:action="@{/dishes/{id}/update(id=${dish.id})}"
+                          method="post">
+
+                        <p>
+                            <label>Име:</label>
+                            <input type="text" name="name"
+                                   th:value="${dish.name}" required>
+                        </p>
+
+                        <p>
+                            <label>Описание:</label>
+                            <textarea name="description"
+                                      th:text="${dish.description}"></textarea>
+                        </p>
+
+                        <p>
+                            <label>Грамаж:</label>
+                            <input type="number" name="weight"
+                                   th:value="${dish.weight}" min="1" required>
+                        </p>
+
+                        <p>
+                            <label>Цена:</label>
+                            <input type="number" name="price"
+                                   th:value="${dish.price}"
+                                   min="0" step="0.01" required>
+                        </p>
+
+                        <p>
+                            <label>Категория:</label>
+                            <select name="categoryId" required>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}"
+                                        th:selected="${category.id.equals(dish.categoryId)}">
+                                </option>
+                            </select>
+                        </p>
+
+                        <button type="submit">Запази промените</button>
+                    </form>
+                </details>
+
+                <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+
+                    <form th:action="@{/dishes/{id}/active(id=${dish.id})}"
+                          method="post">
+
+                        <input type="hidden" name="active"
+                               th:value="${!dish.active}">
+
+                        <button type="submit"
+                                th:text="${dish.active ? 'Деактивирай' : 'Активирай'}">
+                        </button>
+                    </form>
+
+                    <form th:action="@{/dishes/{id}/restock(id=${dish.id})}"
+                          method="post">
+
+                        <label>Добави количество:</label>
+                        <input type="number" name="quantity" min="1" required>
+                        <button type="submit">Зареди</button>
+                    </form>
+
+                </div>
+
+                <form sec:authorize="hasRole('CHEF')"
+                      th:action="@{/dishes/{id}/availability(id=${dish.id})}"
+                      method="post">
+
+                    <input type="hidden" name="available"
+                           th:value="${!dish.available}">
+
+                    <button type="submit"
+                            th:text="${dish.available ? 'Направи неналично' : 'Направи налично'}">
+                    </button>
+                </form>
+
+            </td>
+
+        </tr>
+        </tbody>
+
+    </table>
+
+</main>
+</body>
+</html>

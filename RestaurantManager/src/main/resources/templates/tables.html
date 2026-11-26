@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление на маси</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<main>
+
+    <h1>Управление на маси</h1>
+
+    <p>
+        <a th:href="@{/dashboard}">← Обратно към таблото</a>
+    </p>
+
+    <hr>
+
+    <h2>Филтриране на масите</h2>
+
+    <form th:action="@{/tables}" method="get">
+
+        <label>Статус:</label>
+
+        <select name="status">
+            <option value="">Всички статуси</option>
+
+            <option th:each="tableStatus : ${statuses}"
+                    th:value="${tableStatus}"
+                    th:text="${tableStatus}"
+                    th:selected="${status == tableStatus}">
+            </option>
+        </select>
+
+        <label>Активност:</label>
+
+        <select name="active">
+            <option value="">Всички</option>
+            <option value="true" th:selected="${active == true}">Активни</option>
+            <option value="false" th:selected="${active == false}">Неактивни</option>
+        </select>
+
+        <button type="submit">Филтрирай</button>
+
+        <a th:href="@{/tables}">Изчисти филтрите</a>
+
+    </form>
+
+    <hr>
+
+    <section sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+
+        <h2>Добавяне на нова маса</h2>
+
+        <form th:action="@{/tables/create}" method="post">
+
+            <p>
+                <label>Номер на масата:</label><br>
+                <input type="number" name="tableNumber" min="1" required>
+            </p>
+
+            <p>
+                <label>Капацитет (брой места):</label><br>
+                <input type="number" name="capacity" min="1" required>
+            </p>
+
+            <button type="submit">Добави маса</button>
+
+        </form>
+
+    </section>
+
+    <hr>
+
+    <h2>Всички маси</h2>
+
+    <p th:if="${#lists.isEmpty(tables)}">
+        Няма намерени маси.
+    </p>
+
+    <table th:unless="${#lists.isEmpty(tables)}">
+
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Номер</th>
+            <th>Капацитет</th>
+            <th>Статус</th>
+            <th>Активна</th>
+            <th>Създадена на</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:each="table : ${tables}">
+            <td th:text="${table.id}"></td>
+            <td th:text="${table.tableNumber}"></td>
+            <td th:text="${table.capacity} + ' места'"></td>
+            <td th:text="${table.status}"></td>
+            <td th:text="${table.active ? 'Да' : 'Не'}"></td>
+            <td th:text="${table.createdAt}"></td>
+            <td>
+
+                <details sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                    <summary>Редактирай</summary>
+
+                    <form th:action="@{/tables/{id}/update(id=${table.id})}"
+                          method="post">
+
+                        <p>
+                            <label>Номер:</label>
+                            <input type="number" name="tableNumber"
+                                   th:value="${table.tableNumber}"
+                                   min="1" required>
+                        </p>
+
+                        <p>
+                            <label>Капацитет:</label>
+                            <input type="number" name="capacity"
+                                   th:value="${table.capacity}"
+                                   min="1" required>
+                        </p>
+
+                        <button type="submit">Запази</button>
+
+                    </form>
+                </details>
+
+                <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER', 'WAITER')">
+
+                    <form th:action="@{/tables/{id}/status(id=${table.id})}"
+                          method="post">
+
+                        <label>Промени статус:</label>
+
+                        <select name="status" required>
+                            <option value="AVAILABLE">Свободна</option>
+                            <option value="OCCUPIED">Заета</option>
+                        </select>
+
+                        <button type="submit">Промени</button>
+
+                    </form>
+
+                </div>
+
+                <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+
+                    <form th:if="${table.active}"
+                          th:action="@{/tables/{id}/deactivate(id=${table.id})}"
+                          method="post">
+
+                        <button type="submit">Деактивирай</button>
+
+                    </form>
+
+                    <form th:unless="${table.active}"
+                          th:action="@{/tables/{id}/activate(id=${table.id})}"
+                          method="post">
+
+                        <button type="submit">Активирай</button>
+
+                    </form>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</main>
+</body>
+</html>

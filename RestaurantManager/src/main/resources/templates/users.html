@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление на служители - Restaurant Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main>
+    <h1>Restaurant Manager</h1>
+    <h2>Управление на служители</h2>
+
+    <p>
+        Влязъл потребител:
+        <strong th:text="${username}"></strong>
+    </p>
+
+    <p>
+        Роля:
+        <strong th:text="${currentRole}"></strong>
+    </p>
+
+    <hr>
+
+    <p th:if="${successMessage}"
+       th:text="${successMessage}"
+       class="available-status">
+    </p>
+
+    <!-- СЪЗДАВАНЕ НА СЛУЖИТЕЛ -->
+    <section>
+        <h3>Добавяне на нов служител</h3>
+
+        <form th:action="@{/users/create}" method="post">
+
+            <p>
+                <label for="username">Потребителско име:</label><br>
+                <input type="text" id="username" name="username"
+                       maxlength="50" required>
+            </p>
+
+            <p>
+                <label for="password">Парола:</label><br>
+                <input type="password" id="password" name="password"
+                       required>
+            </p>
+
+            <p>
+                <label for="firstName">Име:</label><br>
+                <input type="text" id="firstName" name="firstName"
+                       required>
+            </p>
+
+            <p>
+                <label for="lastName">Фамилия:</label><br>
+                <input type="text" id="lastName" name="lastName"
+                       required>
+            </p>
+
+            <p>
+                <label for="role">Роля:</label><br>
+                <select id="role" name="role" required>
+                    <option value="">Избери роля</option>
+
+                    <option value="MANAGER"
+                            th:if="${currentRole == 'ADMIN'}">
+                        MANAGER
+                    </option>
+
+                    <option value="WAITER">WAITER</option>
+                    <option value="CHEF">CHEF</option>
+                </select>
+            </p>
+
+            <button type="submit">Създай служител</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <!-- ТЪРСЕНЕ И ФИЛТРИРАНЕ -->
+    <section>
+        <h3>Търсене и филтриране</h3>
+
+        <form th:action="@{/users}" method="get">
+
+            <p>
+                <label for="name">Търсене по име или фамилия:</label><br>
+                <input type="text" id="name" name="name"
+                       placeholder="Въведи име..."
+                       th:value="${name}">
+            </p>
+
+            <p>
+                <label for="roleFilter">Филтър по роля:</label><br>
+                <select id="roleFilter" name="roleFilter">
+                    <option value="">Всички роли</option>
+                    <option th:each="r : ${roles}"
+                            th:value="${r}"
+                            th:text="${r}"
+                            th:selected="${r == roleFilter}">
+                    </option>
+                </select>
+            </p>
+
+            <p>
+                <label for="enabledFilter">Филтър по статус:</label><br>
+                <select id="enabledFilter" name="enabledFilter">
+                    <option value="">Всички статуси</option>
+                    <option value="true"
+                            th:selected="${enabledFilter == true}">
+                        Активни
+                    </option>
+                    <option value="false"
+                            th:selected="${enabledFilter == false}">
+                        Неактивни
+                    </option>
+                </select>
+            </p>
+
+            <button type="submit">Приложи филтрите</button>
+            <a th:href="@{/users}">Изчисти филтрите</a>
+        </form>
+    </section>
+
+    <hr>
+
+    <!-- СПИСЪК СЪС СЛУЖИТЕЛИ -->
+    <section>
+        <h3>Списък на служителите</h3>
+
+        <p>
+            Намерени служители:
+            <strong th:text="${#lists.size(users)}">0</strong>
+        </p>
+
+        <p th:if="${#lists.isEmpty(users)}">
+            Няма служители, отговарящи на зададените критерии.
+        </p>
+
+        <table th:unless="${#lists.isEmpty(users)}">
+            <thead>
+            <tr>
+                <th>№</th>
+                <th>Потребителско име</th>
+                <th>Име</th>
+                <th>Фамилия</th>
+                <th>Роля</th>
+                <th>Статус</th>
+                <th>Дата на създаване</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:text="${user.role}"></td>
+
+                <td>
+                    <span th:if="${user.enabled}"
+                          class="available-status">
+                        Активен
+                    </span>
+
+                    <span th:unless="${user.enabled}"
+                          class="unavailable-status">
+                        Неактивен
+                    </span>
+                </td>
+
+                <td th:text="${user.createdAt}"></td>
+
+                <td>
+                    <form th:if="${user.enabled and user.username != username}"
+                          th:action="@{/users/{id}/deactivate(id=${user.id})}"
+                          method="post">
+                        <button type="submit">
+                            Деактивирай
+                        </button>
+                    </form>
+
+                    <form th:if="${!user.enabled}"
+                          th:action="@{/users/{id}/activate(id=${user.id})}"
+                          method="post">
+                        <button type="submit">
+                            Активирай
+                        </button>
+                    </form>
+
+                    <span th:if="${user.username == username}">
+                        Текущ потребител
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <hr>
+
+    <p>
+        <a th:href="@{/dashboard}">Назад към таблото</a>
+    </p>
+
+</main>
+
+</body>
+</html>

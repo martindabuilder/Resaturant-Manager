@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,36 +12,35 @@
 <main>
     <h1>Restaurant Manager</h1>
 
-    <h2>Dashboard</h2>
+    <h2>Табло за управление</h2>
 
     <p>
-        Welcome,
+        Добре дошли,
         <strong th:text="${username}">Username</strong>!
     </p>
 
     <p>
-        Your role:
+        Ваша роля:
         <strong th:text="${role}">ROLE</strong>
     </p>
 
     <hr>
 
-    <h3>Navigation</h3>
+    <h3>Управление на ресторанта</h3>
 
     <ul>
-        <li><a th:href="@{/restaurant/users}">Users</a></li>
-        <li><a th:href="@{/restaurant/categories}">Categories</a></li>
-        <li><a th:href="@{/restaurant/dishes}">Dishes</a></li>
-        <li><a th:href="@{/restaurant/tables}">Tables</a></li>
-        <li><a th:href="@{/restaurant/reservations}">Reservations</a></li>
-        <li><a th:href="@{/restaurant/orders}">Orders</a></li>
-        <li><a th:href="@{/restaurant/notifications}">Notifications</a></li>
+        <li><a th:href="@{/users}">Служители</a></li>
+        <li><a th:href="@{/categories}">Категории</a></li>
+        <li><a th:href="@{/dishes}">Ястия</a></li>
+        <li><a th:href="@{/tables}">Управление на маси</a></li>
+        <li><a th:href="@{/reservations}">Резервации</a></li>
+        <li><a th:href="@{/orders}">Поръчки</a></li>
+        <li><a th:href="@{/notifications}">Известия</a></li>
     </ul>
 
-    <hr>
 
     <form th:action="@{/logout}" method="post">
-        <button type="submit">Log Out</button>
+        <button type="submit">Изход</button>
     </form>
 
 </main>

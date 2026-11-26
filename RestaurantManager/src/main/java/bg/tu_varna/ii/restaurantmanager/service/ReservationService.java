@@ -1,6 +1,7 @@
 package bg.tu_varna.ii.restaurantmanager.service;
 import bg.tu_varna.ii.restaurantmanager.exception.BusinessRuleException;
 import bg.tu_varna.ii.restaurantmanager.exception.ResourceNotFoundException;
+import bg.tu_varna.ii.restaurantmanager.model.dto.response.ReservationResponseDto;
 import bg.tu_varna.ii.restaurantmanager.model.entity.Reservation;
 import bg.tu_varna.ii.restaurantmanager.model.entity.RestaurantTable;
 import bg.tu_varna.ii.restaurantmanager.model.entity.functionality.OrderStatus;
@@ -164,4 +165,14 @@ public class ReservationService {
 
         return reservationRepository.save(reservation);
     }
+
+
+    @Transactional(readOnly = true)
+    public List<ReservationResponseDto> getAllReservationDtos() {
+        return reservationRepository.findAll()
+                .stream()
+                .map(ReservationResponseDto::new)
+                .toList();
+    }
+
 }

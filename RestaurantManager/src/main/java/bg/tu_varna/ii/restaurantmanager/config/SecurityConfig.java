@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/cart",
                                 "/cart/**",
                                 "/order-success",
+                                "/access-denied",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**"
@@ -85,6 +86,7 @@ public class SecurityConfig {
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
+                        .accessDeniedPage("/access-denied")
                 );
 
         return http.build();

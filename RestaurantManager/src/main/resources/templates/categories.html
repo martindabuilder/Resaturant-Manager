@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление на категории</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<main>
+
+    <h1>Управление на категории</h1>
+
+    <p>
+        <a th:href="@{/dashboard}">Обратно към таблото</a>
+    </p>
+
+    <hr>
+
+    <!-- Филтриране и търсене -->
+    <h2>Търсене на категории</h2>
+
+    <form th:action="@{/categories}" method="get">
+
+        <label for="name">Име на категория:</label>
+        <input type="text"
+               id="name"
+               name="name"
+               th:value="${name}"
+               placeholder="Въведете име">
+
+        <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+            <label for="activeFilter">Статус:</label>
+
+            <select id="activeFilter" name="activeFilter">
+                <option value="">Всички</option>
+
+                <option value="true"
+                        th:selected="${activeFilter != null and activeFilter == true}">
+                    Активни
+                </option>
+
+                <option value="false"
+                        th:selected="${activeFilter != null and activeFilter == false}">
+                    Неактивни
+                </option>
+            </select>
+        </div>
+
+        <button type="submit">Търси</button>
+
+        <a th:href="@{/categories}">Изчисти филтрите</a>
+
+    </form>
+
+    <hr>
+
+    <!-- Добавяне на категория -->
+    <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+
+        <h2>Добавяне на нова категория</h2>
+
+        <form th:action="@{/categories/create}" method="post">
+
+            <label for="categoryName">Име:</label>
+            <input type="text"
+                   id="categoryName"
+                   name="name"
+                   maxlength="100"
+                   required>
+
+            <br><br>
+
+            <label for="categoryDescription">Описание:</label>
+            <textarea id="categoryDescription"
+                      name="description"
+                      maxlength="500"
+                      rows="3"></textarea>
+
+            <br><br>
+
+            <button type="submit">Добави категория</button>
+
+        </form>
+
+    </div>
+
+    <hr>
+
+    <!-- Списък с категории -->
+    <h2>Списък с категории</h2>
+
+    <p th:if="${#lists.isEmpty(categories)}">
+        Няма намерени категории.
+    </p>
+
+    <div th:each="category : ${categories}">
+
+        <div class="category-card">
+
+            <h3 th:text="${category.name}">Име на категория</h3>
+
+            <p>
+                <strong>Описание:</strong>
+                <span th:text="${category.description}">
+                    Описание
+                </span>
+            </p>
+
+            <p>
+                <strong>Статус:</strong>
+
+                <span th:if="${category.active}"
+                      class="available-status">
+                    Активна
+                </span>
+
+                <span th:unless="${category.active}"
+                      class="unavailable-status">
+                    Неактивна
+                </span>
+            </p>
+
+            <p>
+                <strong>Дата на създаване:</strong>
+                <span th:text="${category.createdAt}">
+                    Дата
+                </span>
+            </p>
+
+            <!-- Редактиране -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+
+                <h4>Редактиране на категорията</h4>
+
+                <form th:action="@{/categories/{id}/update(id=${category.id})}"
+                      method="post">
+
+                    <label>Име:</label>
+                    <input type="text"
+                           name="name"
+                           th:value="${category.name}"
+                           maxlength="100"
+                           required>
+
+                    <br><br>
+
+                    <label>Описание:</label>
+                    <textarea name="description"
+                              maxlength="500"
+                              rows="3"
+                              th:text="${category.description}"></textarea>
+
+                    <br><br>
+
+                    <button type="submit">Запази промените</button>
+
+                </form>
+
+                <br>
+
+                <!-- Активиране -->
+                <form th:if="${!category.active}"
+                      th:action="@{/categories/{id}/activate(id=${category.id})}"
+                      method="post">
+
+                    <button type="submit">Активирай</button>
+
+                </form>
+
+                <!-- Деактивиране -->
+                <form th:if="${category.active}"
+                      th:action="@{/categories/{id}/deactivate(id=${category.id})}"
+                      method="post">
+
+                    <button type="submit">Деактивирай</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <hr>
+
+    </div>
+
+</main>
+</body>
+</html>

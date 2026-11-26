@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поръчки - Restaurant Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main>
+    <h1>Restaurant Manager</h1>
+    <h2>Поръчки на ресторанта</h2>
+
+    <div th:if="${#lists.isEmpty(orders)}">
+        <p>В момента няма поръчки.</p>
+    </div>
+
+    <div th:each="order : ${orders}">
+        <hr>
+
+        <h3>
+            Поръчка №
+            <span th:text="${order.id}"></span>
+        </h3>
+
+        <p>
+            Маса:
+            <strong th:text="${order.tableNumber}"></strong>
+        </p>
+
+        <p>
+            Сервитьор:
+            <strong th:text="${order.waiterUsername}"></strong>
+        </p>
+
+        <p>
+            Статус:
+            <strong th:text="${order.status}"></strong>
+        </p>
+
+        <p>
+            Дата:
+            <span th:text="${order.createdAt}"></span>
+        </p>
+
+        <h4>Ястия:</h4>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Ястие</th>
+                <th>Количество</th>
+                <th>Единична цена</th>
+                <th>Статус</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${order.items}">
+                <td th:text="${item.dishName}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.unitPrice} + ' лв.'"></td>
+                <td th:text="${item.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p><a th:href="@{/dashboard}">Назад към таблото</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Достъпът е отказан</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main>
+    <h1>403 - Достъпът е отказан</h1>
+
+    <h2>Нямате необходимите права!</h2>
+
+    <p>
+        Нямате разрешение да отворите тази страница.
+        Моля, обърнете се към администратор, ако смятате,
+        че това е грешка.
+    </p>
+
+    <a th:href="@{/dashboard}">
+        <button type="button">Обратно към таблото</button>
+    </a>
+</main>
+</body>
+</html>

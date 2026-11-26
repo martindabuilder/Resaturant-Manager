@@ -120,4 +120,65 @@ public class DishService {
 
         return new DishResponseDto(updatedDish);
     }
+
+
+
+    @Transactional
+    public DishResponseDto updateDish(Long id, String name, String description, Integer weight, BigDecimal price, Long categoryId) {
+
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dish not found with ID: " + id));
+
+        if (name == null || name.isBlank()) {
+            throw new BusinessRuleException("Dish name cannot be empty.");
+        }
+
+        String trimmedName = name.trim();
+
+        if (weight == null || weight <= 0) {
+            throw new BusinessRuleException("Weight must be bigger than 0.");
+        }
+
+        if (price == null || price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new BusinessRuleException("Price cannot be negative.");
+        }
+
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found."));
+
+        if (!category.isActive()) {
+            throw new BusinessRuleException("Cannot assign a dish to an inactive category.");
+        }
+
+        boolean duplicate = dishRepository.existsByNameIgnoreCaseAndCategory_Id(trimmedName, categoryId);
+
+        if (duplicate && (!dish.getName().equalsIgnoreCase(trimmedName) || !dish.getCategory().getId().equals(categoryId))) {
+            throw new BusinessRuleException("Dish already exists in this category.");
+        }
+
+        dish.setName(trimmedName);
+        dish.setDescription(description);
+        dish.setWeight(weight);
+        dish.setPrice(price);
+        dish.setCategory(category);
+
+        return new DishResponseDto(dishRepository.save(dish));
+    }
+
+    @Transactional
+    public DishResponseDto setDishAvailability(Long id, boolean available) {
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dish not found with ID: " + id));
+
+        if (available && !dish.isActive()) {
+            throw new BusinessRuleException("An inactive dish cannot be made available.");
+        }
+
+        if (available && dish.getQuantity() <= 0) {
+            throw new BusinessRuleException("A dish with zero quantity cannot be made available.");
+        }
+
+        dish.setAvailable(available);
+
+        return new DishResponseDto(dishRepository.save(dish));
+    }
+
+
 }

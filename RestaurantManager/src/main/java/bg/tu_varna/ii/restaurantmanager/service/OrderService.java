@@ -165,6 +165,22 @@ public class OrderService {
         return orderRepository.findByWaiter_Id(waiterId);
     }
 
+    public List<RestaurantOrder> getOrdersByWaiterUsername(String username) {
+
+        User waiter = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Waiter not found."));
+
+        if (!waiter.isEnabled()) {
+            throw new BusinessRuleException("Waiter account is disabled.");
+        }
+
+        if (waiter.getRole() != Role.WAITER) {
+            throw new BusinessRuleException("The selected user is not a waiter.");
+        }
+
+        return getOrderByWaiter(waiter.getId());
+    }
+
 
     // update the status of an individual item from the order
     // only available to users with the CHEF role
