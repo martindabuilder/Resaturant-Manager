@@ -26,6 +26,13 @@ public class OrderController {
         return new OrderResponseDto(orderService.createOrder(tableId, authentication.getName()));
     }
 
+    // complete an order, accessible only to a waiter
+    @PatchMapping("/{orderId}/complete")
+    @PreAuthorize("hasRole('WAITER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void completeOrder(@PathVariable Long orderId) {orderService.completeOrder(orderId);
+    }
+
     // get all orders, can be used by any role
     @GetMapping
     @PreAuthorize("hasAnyRole('WAITER', 'ADMIN', 'MANAGER', 'CHEF')")

@@ -25,7 +25,7 @@ public class DishService {
     }
 
     @Transactional
-    public DishResponseDto createDish(String name, String description, Integer weight, BigDecimal price, Long categoryId) {
+    public DishResponseDto createDish(String name, String description, Integer weight, BigDecimal price, Long categoryId, Integer quantity) {
 
         if (name == null || name.isBlank()) {
             throw new BusinessRuleException("Dish name cannot be empty.");
@@ -41,6 +41,10 @@ public class DishService {
             throw new BusinessRuleException("Price cannot be a negative amount.");
         }
 
+        if (quantity == null || quantity < 0) {
+            throw new BusinessRuleException("Quantity cannot be negative.");
+        }
+
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category with the following ID was not found: " + categoryId));
 
         if (!category.isActive()) {
@@ -51,7 +55,7 @@ public class DishService {
             throw new BusinessRuleException("Dish already exists in this category.");
         }
 
-        Dish dish = new Dish(trimmedName, description, weight, price, category);
+        Dish dish = new Dish(trimmedName, description, weight, price, category, quantity);
         Dish savedDish = dishRepository.save(dish);
 
         return new DishResponseDto(savedDish);
@@ -84,9 +88,34 @@ public class DishService {
     }
 
     @Transactional
-    public DishResponseDto updateDishAvailability(Long id, boolean available) {
+    public DishResponseDto updateDishAvailability(Long id, boolean active) {
         Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dish not found with ID: " + id));
-        dish.setAvailable(available);
+        dish.setActive(active);
+        dish.setAvailable(active && dish.getQuantity() > 0);
+        Dish updatedDish = dishRepository.save(dish);
+
+        return new DishResponseDto(updatedDish);
+    }
+
+    @Transactional
+    public DishResponseDto restockDish(Long id, Integer quantity) {
+
+        if (quantity == null || quantity <= 0) {
+            throw new BusinessRuleException("Restock quantity must be greater than 0.");
+        }
+
+        Dish dish = dishRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dish not found with ID: " + id));
+
+        int newQuantity;
+
+        try {
+            newQuantity = Math.addExact(dish.getQuantity(), quantity);
+        } catch (ArithmeticException e) {
+            throw new BusinessRuleException("Restock quantity is too large.");
+        }
+
+        dish.setQuantity(newQuantity);
+        dish.setAvailable(dish.isActive() && newQuantity > 0);
         Dish updatedDish = dishRepository.save(dish);
 
         return new DishResponseDto(updatedDish);

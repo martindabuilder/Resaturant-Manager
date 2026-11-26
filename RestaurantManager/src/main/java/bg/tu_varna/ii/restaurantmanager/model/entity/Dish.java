@@ -27,6 +27,9 @@ public class Dish {
     @Column(nullable = false)
     private boolean available = true;
 
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean active = true;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -34,15 +37,22 @@ public class Dish {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    // added for the DISH_OUT_OF_STOCK notification
+    @Column(nullable = false)
+    private Integer quantity;
+
+
     protected Dish() {}
 
-    public Dish(String name, String description, Integer weight, BigDecimal price, Category category) {
+    public Dish(String name, String description, Integer weight, BigDecimal price, Category category, Integer quantity) {
         this.name = name;
         this.description = description;
         this.weight = weight;
         this.price = price;
         this.category = category;
-        this.available = true;
+        this.available = quantity > 0;
+        this.quantity = quantity;
+        this.active = true;
     }
 
     @PrePersist
@@ -77,4 +87,10 @@ public class Dish {
     public Category getCategory() {return category;}
 
     public void setCategory(Category category) {this.category = category;}
+
+    public Integer getQuantity() {return quantity;}
+    public void setQuantity(Integer quantity) {this.quantity = quantity;}
+
+    public boolean isActive() {return active;}
+    public void setActive(boolean active) {this.active = active;}
 }

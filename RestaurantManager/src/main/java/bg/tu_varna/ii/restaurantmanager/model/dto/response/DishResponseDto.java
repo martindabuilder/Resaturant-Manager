@@ -15,6 +15,8 @@ public class DishResponseDto {
     private final LocalDateTime createdAt;
     private final Long categoryId;
     private final String categoryName;
+    private final Integer quantity;
+    private final boolean active;
 
     public DishResponseDto(Dish dish) {
         this.id = dish.getId();
@@ -26,34 +28,20 @@ public class DishResponseDto {
         this.createdAt = dish.getCreatedAt();
         this.categoryId = dish.getCategory().getId();
         this.categoryName = dish.getCategory().getName();
+        this.quantity = dish.getQuantity();
+        this.active = dish.isActive();
     }
 
-    public Long getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public Integer getWeight() {
-        return weight;
-    }
-    public BigDecimal getPrice() {
-        return price;
-    }
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    public String getCategoryName() {
-        return categoryName;
-    }
-    public Long getCategoryId() {
-        return categoryId;
-    }
-    public boolean isAvailable() {
-        return available;
-    }
-    public String getDescription() {
-        return description;
-    }
+    public Long getId() {return id;}
+    public String getName() {return name;}
+    public Integer getWeight() {return weight;}
+    public BigDecimal getPrice() {return price;}
+    public LocalDateTime getCreatedAt() {return createdAt;}
+    public String getCategoryName() {return categoryName;}
+    public Long getCategoryId() {return categoryId;}
+    public boolean isAvailable() {return available;}
+    public String getDescription() {return description;}
+    public Integer getQuantity() {return quantity;}
+    public boolean isActive() {return active;}
 }
 

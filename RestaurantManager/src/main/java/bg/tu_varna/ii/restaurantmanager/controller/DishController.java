@@ -25,11 +25,10 @@ public class DishController {
             @RequestParam(required = false) String description,
             @RequestParam Integer weight,
             @RequestParam BigDecimal price,
-            @RequestParam Long categoryId) {
+            @RequestParam Long categoryId,
+            @RequestParam Integer quantity) {
 
-        return dishService.createDish(
-                name, description, weight, price, categoryId
-        );
+        return dishService.createDish(name, description, weight, price, categoryId, quantity);
     }
 
     @GetMapping
@@ -46,15 +45,13 @@ public class DishController {
 
     @GetMapping("/category/{categoryId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'WAITER', 'CHEF')")
-    public List<DishResponseDto> getDishesByCategory(
-            @PathVariable("categoryId") Long categoryId) {
+    public List<DishResponseDto> getDishesByCategory(@PathVariable("categoryId") Long categoryId) {
         return dishService.getDishesByCategory(categoryId);
     }
 
     @GetMapping("/availability")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'WAITER', 'CHEF')")
-    public List<DishResponseDto> getDishesByAvailability(
-            @RequestParam boolean available) {
+    public List<DishResponseDto> getDishesByAvailability(@RequestParam boolean available) {
         return dishService.getDishesByAvailability(available);
     }
 
@@ -64,12 +61,15 @@ public class DishController {
         return dishService.searchDishes(name);
     }
 
-    @PutMapping("/{id}/availability")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'CHEF')")
-    public DishResponseDto updateAvailability(
-            @PathVariable("id") Long id,
-            @RequestParam boolean available) {
+    @PutMapping("/{id}/active")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public DishResponseDto updateDishActive(@PathVariable("id") Long id, @RequestParam boolean active) {
+        return dishService.updateDishAvailability(id, active);
+    }
 
-        return dishService.updateDishAvailability(id, available);
+    @PatchMapping("/{id}/restock")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public DishResponseDto restockDish(@PathVariable("id") Long id, @RequestParam Integer quantity) {
+        return dishService.restockDish(id, quantity);
     }
 }

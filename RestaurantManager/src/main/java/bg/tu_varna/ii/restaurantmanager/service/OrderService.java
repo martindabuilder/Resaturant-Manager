@@ -251,13 +251,33 @@ public class OrderService {
         }
 
         OrderStatus previousOrderStatus = order.getStatus();
+
+        if (item.getStatus() == OrderItemStatus.NEW
+                && newStatus == OrderItemStatus.ACCEPTED) {
+
+            Dish dish = item.getDish();
+
+            if (dish.getQuantity() < item.getQuantity()) {
+                throw new BusinessRuleException("Not enough quantity available for dish: " + dish.getName());
+            }
+
+            int remainingQuantity = dish.getQuantity() - item.getQuantity();
+
+            dish.setQuantity(remainingQuantity);
+            dish.setAvailable(dish.isActive() && remainingQuantity > 0);
+            dishRepository.save(dish);
+
+            if (remainingQuantity == 0) {
+                notifyWhenItemOutOfStock(dish);
+            }
+        }
+
         item.setStatus(newStatus);
         updateOrderStatus(order);
         orderItemRepository.save(item);
         orderRepository.save(order);
 
         if (previousOrderStatus != OrderStatus.READY && order.getStatus() == OrderStatus.READY) {
-            System.out.println("ORDER READY NOTIFICATION TRIGGERED!");
             notificationService.createNotification(order.getWaiter().getId(), "Order #" + order.getId() + " is ready to be served.", NotificationType.ORDER_READY);
         }
 
@@ -280,5 +300,13 @@ public class OrderService {
         tableRepository.save(table);
     }
 
+    // notifies when a dish is out of stock
+    private void notifyWhenItemOutOfStock(Dish dish) {
+        List<Role> recipientRoles = List.of(Role.ADMIN, Role.MANAGER, Role.CHEF);
+        List<User> recipients = recipientRoles.stream().flatMap(role -> userRepository.findByRole(role).stream()).filter(User::isEnabled).toList();
 
+        for (User recipient : recipients) {
+            notificationService.createNotification(recipient.getId(), "Dish \"" + dish.getName() + "\" is out of stock.", NotificationType.DISH_OUT_OF_STOCK);
+        }
+    }
 }
