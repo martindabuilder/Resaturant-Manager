@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Избор на маса</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main>
+    <h1>Restaurant Manager</h1>
+
+    <h2>Изберете своята маса</h2>
+
+    <p>
+        Моля, изберете една от свободните маси,
+        за да продължите към менюто.
+    </p>
+
+    <div th:if="${#lists.isEmpty(tables)}">
+        <p>В момента няма свободни маси.</p>
+    </div>
+
+    <div class="table-list" th:unless="${#lists.isEmpty(tables)}">
+
+        <div class="table-card" th:each="table : ${tables}">
+
+            <h3 th:text="'Маса №' + ${table.tableNumber}">
+                Маса №1
+            </h3>
+
+            <p>
+                Капацитет:
+                <strong th:text="${table.capacity}">4</strong>
+                места
+            </p>
+
+            <p class="available-status">Свободна</p>
+
+            <a th:href="@{/menu(tableId=${table.id})}">
+                <button type="button">Избери масата</button>
+            </a>
+
+        </div>
+
+    </div>
+
+    <p>
+        <a th:href="@{/}">Обратно към началната страница</a>
+    </p>
+
+</main>
+
+</body>
+</html>

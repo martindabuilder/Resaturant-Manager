@@ -309,4 +309,34 @@ public class OrderService {
             notificationService.createNotification(recipient.getId(), "Dish \"" + dish.getName() + "\" is out of stock.", NotificationType.DISH_OUT_OF_STOCK);
         }
     }
+
+    // creates an order for a public customer and automatically assigns a waiter
+    public RestaurantOrder createCustomerOrder(Long tableId) {
+        RestaurantTable table = tableRepository.findById(tableId).orElseThrow(() -> new ResourceNotFoundException("Table not found."));
+
+        if (!table.isActive()) {
+            throw new BusinessRuleException("This table is inactive.");
+        }
+
+        if (table.getStatus() != TableStatus.AVAILABLE) {
+            throw new BusinessRuleException("This table is not available.");
+        }
+
+        List<ReservationStatus> blockingStatuses = List.of(ReservationStatus.PENDING, ReservationStatus.CONFIRMED, ReservationStatus.SEATED);
+
+        boolean hasActiveReservation = reservationRepository.existsBlockingReservation(table.getId(), java.time.LocalDateTime.now(), blockingStatuses);
+
+        if (hasActiveReservation) {
+            throw new BusinessRuleException("This table has an active reservation.");
+        }
+
+        User waiter = userRepository.findFirstByRoleAndEnabledTrueOrderByIdAsc(Role.WAITER).orElseThrow(() -> new BusinessRuleException("There are no active waiters available."));
+
+        RestaurantOrder order = new RestaurantOrder(table, waiter);
+
+        table.setStatus(TableStatus.OCCUPIED);
+        tableRepository.save(table);
+
+        return orderRepository.save(order);
+    }
 }

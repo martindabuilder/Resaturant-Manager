@@ -12,4 +12,6 @@ public interface TableRepository extends JpaRepository<RestaurantTable, Long> {
     List<RestaurantTable> findByStatus(TableStatus status);
     List<RestaurantTable> findByActive(boolean active);
     List<RestaurantTable> findByCapacityGreaterThanEqual(Integer capacity);
+
+    List<RestaurantTable> findByActiveTrueAndStatusOrderByTableNumberAsc(TableStatus status);
 }

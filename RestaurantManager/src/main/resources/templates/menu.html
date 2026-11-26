@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню - Restaurant Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main>
+    <h1>Restaurant Manager</h1>
+    <h2>Нашето меню</h2>
+
+    <p>
+        Избрана маса:
+        <strong th:text="${tableId}">1</strong>
+    </p>
+
+    <div th:if="${#lists.isEmpty(categories)}">
+        <p>В момента няма активни категории.</p>
+    </div>
+
+    <section th:each="category : ${categories}">
+        <h2 th:text="${category.name}">Категория</h2>
+
+        <p th:if="${category.description != null}"
+           th:text="${category.description}">
+        </p>
+
+        <div class="dish-list">
+            <div class="dish-card"
+                 th:each="dish : ${dishes}"
+                 th:if="${dish.categoryId == category.id}">
+
+                <h3 th:text="${dish.name}">Име на ястие</h3>
+
+                <p th:text="${dish.description}">
+                    Описание
+                </p>
+
+                <p>
+                    Грамаж:
+                    <strong th:text="${dish.weight}">300</strong> г
+                </p>
+
+                <p>
+                    Цена:
+                    <strong th:text="${dish.price}">10.00</strong> лв.
+                </p>
+
+                <p th:if="${dish.available}" class="available-status">
+                    Налично
+                </p>
+
+                <p th:unless="${dish.available}" class="unavailable-status">
+                    Временно неналично
+                </p>
+
+            </div>
+        </div>
+    </section>
+
+    <p>
+        <a th:href="@{/tables-selection}">
+            Назад към избора на маса
+        </a>
+    </p>
+</main>
+
+</body>
+</html>

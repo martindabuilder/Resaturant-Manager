@@ -120,4 +120,11 @@ public class TableService {
 
         return tableRepository.findByCapacityGreaterThanEqual(capacity);
     }
+
+    // get active and available tables for customers
+    public List<RestaurantTable> getAvailableTables() {
+        return tableRepository.findByActiveTrueAndStatusOrderByTableNumberAsc(
+                TableStatus.AVAILABLE
+        );
+    }
 }

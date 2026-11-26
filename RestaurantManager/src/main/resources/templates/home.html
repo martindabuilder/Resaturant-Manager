@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurant Manager - Начало</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<main>
+    <h1>Restaurant Manager</h1>
+
+    <h2>Добре дошли в нашия ресторант!</h2>
+
+    <p>
+        Изберете своята маса, разгледайте менюто
+        и направете поръчката си лесно и удобно.
+    </p>
+
+    <hr>
+
+    <h3>Какво желаете да направите?</h3>
+
+    <p>
+        <a th:href="@{/tables-selection}">
+            <button type="button">Направи поръчка</button>
+        </a>
+    </p>
+
+    <p>
+        <a th:href="@{/reservation}">
+            <button type="button">Направи резервация</button>
+        </a>
+    </p>
+
+    <hr>
+
+    <p>
+        Работите в ресторанта?
+        <a th:href="@{/login}">Вход за персонала</a>
+    </p>
+</main>
+
+</body>
+</html>
