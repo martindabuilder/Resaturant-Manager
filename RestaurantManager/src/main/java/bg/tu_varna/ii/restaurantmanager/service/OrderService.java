@@ -250,11 +250,11 @@ public class OrderService {
             throw new BusinessRuleException("Invalid order item status transition");
         }
 
+        OrderStatus previousOrderStatus = order.getStatus();
         item.setStatus(newStatus);
         updateOrderStatus(order);
         orderItemRepository.save(item);
         orderRepository.save(order);
-        OrderStatus previousOrderStatus = order.getStatus();
 
         if (previousOrderStatus != OrderStatus.READY && order.getStatus() == OrderStatus.READY) {
             System.out.println("ORDER READY NOTIFICATION TRIGGERED!");
