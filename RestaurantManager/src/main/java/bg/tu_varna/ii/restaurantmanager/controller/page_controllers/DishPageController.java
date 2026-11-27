@@ -2,6 +2,8 @@ package bg.tu_varna.ii.restaurantmanager.controller.page_controllers;
 import bg.tu_varna.ii.restaurantmanager.model.dto.response.CategoryResponseDto;
 import bg.tu_varna.ii.restaurantmanager.service.CategoryService;
 import bg.tu_varna.ii.restaurantmanager.service.DishService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class DishPageController {
-
+    private static final Logger logger = LogManager.getLogger(DishPageController.class);
     private final DishService dishService;
     private final CategoryService categoryService;
 
@@ -52,6 +54,7 @@ public class DishPageController {
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public String createDish(@RequestParam String name, @RequestParam(required = false) String description, @RequestParam Integer weight, @RequestParam java.math.BigDecimal price, @RequestParam Long categoryId, @RequestParam Integer quantity) {
         dishService.createDish(name, description, weight, price, categoryId, quantity);
+        logger.info("Създадено е ново ястие: {}", name);
 
         return "redirect:/dishes";
     }

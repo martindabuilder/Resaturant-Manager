@@ -1,0 +1,171 @@
+2026-11-27 08:52:00 [main] INFO  bg.tu_varna.ii.restaurantmanager.RestaurantManagerApplication - Starting RestaurantManagerApplication using Java 21.0.13 with PID 28168 (C:\Users\User\Desktop\saitchetaproekti\Resaturant Manager\RestaurantManager\target\classes started by User in C:\Users\User\Desktop\saitchetaproekti\Resaturant Manager\RestaurantManager)
+2026-11-27 08:52:00 [main] INFO  bg.tu_varna.ii.restaurantmanager.RestaurantManagerApplication - No active profile set, falling back to 1 default profile: "default"
+2026-11-27 08:52:07 [main] WARN  org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.BillController:
+	{GET [/restaurant/bills/order/{orderId}]}: getBillByOrder(Long)
+	{PUT [/restaurant/bills/{billId}/discount/{discountId}]}: applyDiscount(Long,Long)
+	{GET [/restaurant/bills/{billId}]}: getBillById(Long)
+	{POST [/restaurant/bills/order/{orderId}]}: createBill(Long)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.CategoryController:
+	{GET [/restaurant/categories]}: getAllCategories()
+	{PUT [/restaurant/categories/{id}]}: updateCategory(Long,String,String)
+	{PUT [/restaurant/categories/{id}/activate]}: activateCategory(Long)
+	{GET [/restaurant/categories/search]}: searchCategories(String)
+	{POST [/restaurant/categories]}: createCategory(String,String)
+	{GET [/restaurant/categories/{id}]}: getCategoryById(Long)
+	{PUT [/restaurant/categories/{id}/deactivate]}: deactivateCategory(Long)
+	{GET [/restaurant/categories/status]}: getCategoriesByStatus(boolean)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.CustomerCartController:
+	{POST [/cart/remove]}: removeFromCart(Long,Long,HttpSession)
+	{POST [/cart/submit]}: submitOrder(Long,HttpSession)
+	{POST [/cart/add]}: addToCart(Long,Long,HttpSession)
+	{GET [/cart]}: viewCart(Long,HttpSession,Model)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.DiscountController:
+	{PUT [/restaurant/discounts/{discountId}]}: updateDiscount(Long,String,String,DiscountType,BigDecimal,LocalDateTime,LocalDateTime)
+	{POST [/restaurant/discounts]}: createDiscount(String,String,DiscountType,BigDecimal,LocalDateTime,LocalDateTime)
+	{PUT [/restaurant/discounts/{discountId}/deactivate]}: deactivateDiscount(Long)
+	{GET [/restaurant/discounts]}: getAllDiscounts()
+	{GET [/restaurant/discounts/{discountId}]}: getDiscountById(Long)
+	{PUT [/restaurant/discounts/{discountId}/activate]}: activateDiscount(Long)
+	{GET [/restaurant/discounts/status]}: getDiscountsByStatus(boolean)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.DishController:
+	{GET [/restaurant/dishes/search]}: searchDishes(String)
+	{PATCH [/restaurant/dishes/{id}/restock]}: restockDish(Long,Integer)
+	{PUT [/restaurant/dishes/{id}/active]}: updateDishActive(Long,boolean)
+	{GET [/restaurant/dishes/{id}]}: getDishById(Long)
+	{GET [/restaurant/dishes]}: getAllDishes()
+	{PUT [/restaurant/dishes/{id}]}: updateDish(Long,String,String,Integer,BigDecimal,Long)
+	{POST [/restaurant/dishes]}: createDish(String,String,Integer,BigDecimal,Long,Integer)
+	{PATCH [/restaurant/dishes/{id}/availability]}: setDishAvailability(Long,boolean)
+	{GET [/restaurant/dishes/availability]}: getDishesByAvailability(boolean)
+	{GET [/restaurant/dishes/category/{categoryId}]}: getDishesByCategory(Long)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.NotificationController:
+	{GET [/restaurant/notifications]}: getMyNotifications(Authentication)
+	{PATCH [/restaurant/notifications/{notificationId}/read]}: markAsRead(Long,Authentication)
+	{GET [/restaurant/notifications/unread/count]}: getMyUnreadNotificationCount(Authentication)
+	{GET [/restaurant/notifications/unread]}: getMyUnreadNotifications(Authentication)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.OrderController:
+	{DELETE [/restaurant/orders/{orderId}/items/{itemId}]}: removeItem(Long,Long)
+	{POST [/restaurant/orders/{orderId}/items]}: addItem(Long,Long,Integer)
+	{POST [/restaurant/orders]}: createOrder(Long,Authentication)
+	{GET [/restaurant/orders/{orderId}]}: getOrderById(Long)
+	{GET [/restaurant/orders/table/{tableId}]}: getOrderByTable(Long)
+	{GET [/restaurant/orders]}: getAllOrders()
+	{PATCH [/restaurant/orders/{orderId}/complete]}: completeOrder(Long)
+	{GET [/restaurant/orders/waiter/{waiterId}]}: getOrdersByWaiter(Long)
+	{PATCH [/restaurant/orders/items/{itemId}/status]}: updateOrderItemStatus(Long,OrderItemStatus)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.p.DishPageController:
+	{POST [/dishes/{id}/restock]}: restockDish(Long,Integer)
+	{POST [/dishes/{id}/active]}: updateDishActive(Long,boolean)
+	{POST [/dishes/{id}/update]}: updateDish(Long,String,String,Integer,BigDecimal,Long)
+	{GET [/dishes]}: dishesPage(Authentication,String,Long,Boolean,Model)
+	{POST [/dishes/create]}: createDish(String,String,Integer,BigDecimal,Long,Integer)
+	{POST [/dishes/{id}/availability]}: setDishAvailability(Long,boolean)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.p.PageController:
+	{GET [/orders]}: ordersPage(Authentication,Model)
+	{GET [/order-success]}: orderSuccess(Long,Model)
+	{GET [/tables-selection]}: tablesSelection(Model)
+	{GET [/access-denied]}: accessDenied()
+	{GET [/]}: homePage()
+	{GET [/menu]}: menuPage(Long,Model)
+	{GET [/dashboard]}: dashboard(Authentication,Model)
+	{GET [/login]}: loginPage()
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.p.CategoryPageController:
+	{POST [/categories/{id}/update]}: updateCategory(Long,String,String,RedirectAttributes)
+	{POST [/categories/{id}/activate]}: activateCategory(Long,RedirectAttributes)
+	{POST [/categories/create]}: createCategory(String,String,RedirectAttributes)
+	{POST [/categories/{id}/deactivate]}: deactivateCategory(Long,RedirectAttributes)
+	{GET [/categories]}: categoriesPage(String,Boolean,Model)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.p.ReservationPageController:
+	{GET [/reservations]}: reservationsPage(Model)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.p.TablePageController:
+	{GET [/tables]}: tablesPage(TableStatus,Boolean,Model)
+	{POST [/tables/create]}: createTable(Integer,Integer)
+	{POST [/tables/{id}/update]}: updateTable(Long,Integer,Integer)
+	{POST [/tables/{id}/status]}: updateTableStatus(Long,TableStatus)
+	{POST [/tables/{id}/deactivate]}: deactivateTable(Long)
+	{POST [/tables/{id}/activate]}: activateTable(Long)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.p.UserPageController:
+	{POST [/users/create]}: createUser(String,String,String,String,Role,RedirectAttributes)
+	{GET [/users]}: usersPage(Authentication,String,Role,Boolean,Model)
+	{POST [/users/{id}/deactivate]}: deactivateUser(Long,RedirectAttributes)
+	{POST [/users/{id}/activate]}: activateUser(Long,RedirectAttributes)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.PaymentController:
+	{POST [/restaurant/payments/bill/{billId}]}: createPayment(Long,PaymentMethod)
+	{GET [/restaurant/payments/{paymentId}]}: getPaymentById(Long)
+	{PUT [/restaurant/payments/{paymentId}/pay]}: markPaymentAsPaid(Long)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.ReportController:
+	{GET [/restaurant/reports/sales-by-waiter]}: getSalesByWaiter(LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reports/current-orders]}: getCurrentOrders(LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reports/sales-by-category]}: getSalesByCategory(LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reports/sales-by-dish]}: getSalesByDish(LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reports/revenue-by-shift]}: getRevenueByShift(LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reports/table-occupancy]}: getTableOccupancy()
+	{GET [/restaurant/reports/revenue-by-payment-method]}: getRevenueByPaymentMethod(LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reports/applied-discounts]}: getAppliedDiscounts(LocalDateTime,LocalDateTime)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.ReservationController:
+	{GET [/restaurant/reservations]}: getAllReservations()
+	{GET [/restaurant/reservations/search]}: searchReservations(String)
+	{POST [/restaurant/reservations]}: createReservation(Long,String,String,Integer,LocalDateTime,LocalDateTime)
+	{GET [/restaurant/reservations/{id}]}: getReservationById(Long)
+	{GET [/restaurant/reservations/phone]}: getReservationsByPhoneNumber(String)
+	{GET [/restaurant/reservations/table/{tableId}]}: getReservationsByTable(Long)
+	{GET [/restaurant/reservations/status/{status}]}: getReservationsByStatus(ReservationStatus)
+	{PUT [/restaurant/reservations/{id}/status]}: updateReservationStatus(Long,ReservationStatus)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.ShiftController:
+	{GET [/restaurant/shifts]}: getAllShifts()
+	{POST [/restaurant/shifts]}: createShift(Long,LocalDateTime,LocalDateTime)
+	{DELETE [/restaurant/shifts/{shiftId}]}: deleteShift(Long)
+	{GET [/restaurant/shifts/waiter/{waiterId}]}: getAllShiftsByWaiter(Long)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.TableController:
+	{POST [/restaurant/tables]}: createTable(Integer,Integer)
+	{PUT [/restaurant/tables/{id}]}: updateTable(Long,Integer,Integer)
+	{PUT [/restaurant/tables/{id}/status]}: updateTableStatus(Long,TableStatus)
+	{PUT [/restaurant/tables/{id}/deactivate]}: deactivateTable(Long)
+	{GET [/restaurant/tables]}: getAllTables()
+	{PUT [/restaurant/tables/{id}/activate]}: activateTable(Long)
+	{GET [/restaurant/tables/status]}: getTablesByStatus(TableStatus)
+	{GET [/restaurant/tables/{id}]}: getTableById(Long)
+	{GET [/restaurant/tables/number/{tableNumber}]}: getTableByNumber(Integer)
+	{GET [/restaurant/tables/active]}: getTablesByActiveStatus(boolean)
+	{GET [/restaurant/tables/capacity]}: getTablesByCapacity(Integer)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	b.t.i.r.c.UserController:
+	{POST [/restaurant/users]}: createUser(String,String,String,String,Role)
+	{PUT [/restaurant/users/{id}/deactivate]}: deactivateUser(Long)
+	{GET [/restaurant/users]}: getAllUsers()
+	{GET [/restaurant/users/{id}]}: getUserById(Long)
+	{PUT [/restaurant/users/{id}/activate]}: activateUser(Long)
+	{GET [/restaurant/users/role/{role}]}: getUsersByRole(Role)
+	{GET [/restaurant/users/status]}: getUsersByStatus(boolean)
+	{GET [/restaurant/users/search]}: searchUsers(String)
+2026-11-27 08:52:07 [main] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 
+	o.s.b.w.a.e.BasicErrorController:
+	{ [/error]}: error(HttpServletRequest)
+	{ [/error], produces [text/html]}: errorHtml(HttpServletRequest,HttpServletResponse)
+2026-11-27 08:52:07 [main] DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 120 mappings in 'requestMappingHandlerMapping'
+2026-11-27 08:52:08 [main] INFO  bg.tu_varna.ii.restaurantmanager.RestaurantManagerApplication - Started RestaurantManagerApplication in 8.529 seconds (process running for 9.956)
+2026-11-27 08:53:31 [http-nio-8081-exec-2] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped to bg.tu_varna.ii.restaurantmanager.controller.page_controllers.PageController#loginPage()
+2026-11-27 08:53:42 [http-nio-8081-exec-5] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped to bg.tu_varna.ii.restaurantmanager.controller.page_controllers.PageController#dashboard(Authentication, Model)
+2026-11-27 08:53:44 [http-nio-8081-exec-4] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped to bg.tu_varna.ii.restaurantmanager.controller.page_controllers.DishPageController#dishesPage(Authentication, String, Long, Boolean, Model)
+2026-11-27 08:53:59 [http-nio-8081-exec-9] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped to bg.tu_varna.ii.restaurantmanager.controller.page_controllers.DishPageController#createDish(String, String, Integer, BigDecimal, Long, Integer)
+2026-11-27 08:53:59 [http-nio-8081-exec-9] INFO  bg.tu_varna.ii.restaurantmanager.controller.page_controllers.DishPageController - Създадено е ново ястие: testqstie
+2026-11-27 08:53:59 [http-nio-8081-exec-10] TRACE org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped to bg.tu_varna.ii.restaurantmanager.controller.page_controllers.DishPageController#dishesPage(Authentication, String, Long, Boolean, Model)
